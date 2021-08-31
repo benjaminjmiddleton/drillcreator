@@ -1,4 +1,4 @@
-﻿# Professional Bibliography
+# Professional Bibliography
 ## Contact Information
  - Matthew Kuhr
  - kuhrmw@mail.uc.edu
@@ -8,7 +8,7 @@
  - Engineering Consulting Services at Siemens Digital Industries Software in Milford, Ohio (Fa18, Su19, Sp20, Fa20, Su21)
      - Technical Tasks
         - Performed development work on a large web application
-        - Implementation new features as well as maintained existing features
+        - Implementated new features as well as maintained existing features
         - Worked extensively with AngularJS, HTML, CSS, and JS
         - Did some work with C# for back end development
      - Soft Tasks
@@ -18,11 +18,10 @@
      - Specific Tasks
         - Extensive bug fixing for both visual and functional issues
         - Development of new pages, including an improved search UI and formula editor powered by LaTeX
-        - Helped to integrate two Siemens web applications, primarily by implementing the API used to communicate between them
+        - Integration of two Siemens web applications, primarily by implementing the API used to communicate between them
 
 ## Project Sought
-- I want so create an application that is functional and useful for a non-technical user
-- I greatly enjoy the problem solving aspects of coding and would enjoy solving a theoretical problem with real world implications
-- Though much of my experience at co-op is in UI, I would like to do more functional work
-
+- Application that is functional and useful for a non-technical user
+- Application must include the problem solving aspects of coding, possibly by solving a theoretical problem with real world implications
+- Though most experienced with UI development through co-op, prefered work is functional
 
