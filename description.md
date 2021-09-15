@@ -24,7 +24,7 @@ large amounts of time.
 ### Technical Background
 The algorithms necessary to create this image-to-drill conversion, as well as the kind of "intelligent" drill editing
 (similar to how current IDEs intelligently suggest line completion for your code) that we imagine are not simple. We will
-draw on experience from both classes and co-op to create a complete product with a user-friendly GUI, complex features,
+draw on experience from both classes and co-ops to create a complete product with a user-friendly GUI, complex features,
 and file compatibility with industry-standard software(s).
 
 ### Proposed Approach
