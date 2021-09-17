@@ -1,0 +1,12 @@
+# User Stories
+- As a drill writer, I want to be able to set band size and instrumentation so that it does not need to be set each time.
+- As a drill writer, I want to be able to convert between high school, college, and professional field markings so that the drill is applicable to all field types.
+- As a drill writer, I want to create a new drill set from an image so that I can added new sets.
+- As a drill writer, I want to be able to edit drill sets so that I can improve them.
+- As a drill writer, I want to be able to duplicate a previous drill set so that I can set up basic transitions such as expansions and rotations.
+- As a drill writer, I want to find the optimal routing between two drill sets so that the band can transition from one set to another.
+- As a drill writer, I want to be able to edit the automatically generated routing so that I can create more dynamic and engaging shows.
+- As a drill writer, I want to see potential collision points and unreasonable step sizes so that they may be mitigated before the drill is put to the field.
+- As a drill writer, I want to be able to convert moves between floats, flanks, and follow the leader drill moves so that I can make more dynamic and engaging shows.
+- As a drill writer, I want to be able to convert moves between halftime, singletime, and doubletime steps, as well as scatters so that I can make more dynamic and engaging shows.
+- As a drill writer, I want to be able to import and export the completed drill into a format which can be distributed to marchers so that drill can be more easily learned.
