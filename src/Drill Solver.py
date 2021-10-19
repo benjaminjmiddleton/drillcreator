@@ -1,12 +1,43 @@
-from itertools import permutations
+import copy
 
-def getPermutations(s):
-    return permutations(s)
+def calculateDistance(a,b):
+        return ((b[0] - a[0])**2 + (b[1] - a[1])**2)**.5
+
+def getPermutations(players, set1, set2):
+    
+    def permutate(steps, permutations = []):
+        
+        if len(steps) == 0:
+            return permutations
+        if len(permutations) == 0:
+            return permutate(steps[1:], [[x] for x in steps[0]])
+        result = [];
+        for p in permutations:
+            for s in steps[0]:
+                if s not in p:
+                    newP = copy.deepcopy(p)
+                    newP.append(s)
+                    result.append(newP)
+        return permutate(steps[1:], result)
+    
+    distances = [];
+    for s1 in set1:
+        for s2 in set2:
+            distances.append(calculateDistance(s1,s2));
+    
+    mean = sum(distances) / len(distances)
+    std = (sum([((x - mean)**2) for x in distances]) / len(distances))**.5
+        
+    possibilities = [];
+    
+    for s1 in set1:
+        possibilities.append([s2 for s2 in set2 if calculateDistance(s1, s2) < mean + std])
+        
+    return permutate(possibilities)
     
     
 def rankTransition(s1, s2, counts):
-    def calculateDistance(a,b):
-        return ((b[0] - a[0])**2 + (b[1] - a[1])**2)**.5
+    
         
     def calculateCollisions(s1, s2, counts):
         def updatePlayer(t1, t2, c):
@@ -32,13 +63,14 @@ def rankTransition(s1, s2, counts):
     collisions = calculateCollisions(s1, s2, counts)
     score = distance + maxDistance**2 + collisions*100
     return (score, s2)
-    
+
+players = ["A","B","C","D"]  
 set1 = [(0,0),(8,0),(0,8),(8,8)]
-set2 = [(0,0),(8,0),(0,8),(8,8)]
+set2 = [x for x in set1] # static set
+#set2 = [(x[0],x[1] + 8) for x in set1] # translation
 
-p = getPermutations(set2)
 
-rankings = [rankTransition(set1,s2,8) for s2 in getPermutations(set2)]
+rankings = [rankTransition(set1,s2,8) for s2 in getPermutations(players, set1, set2)]
 rankings.sort(key=lambda tup: tup[0])
 
 for r in rankings:
