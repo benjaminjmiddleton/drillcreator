@@ -56,7 +56,8 @@ for imagePath in glob.glob(args["images"] + "/*square.png"):
 
 	i = np.argwhere(wide == 255)
 	t = tuple(map(tuple, i))
-	t_sort = sorted(t, key=lambda p: atan2(p[1], p[0]))
+	c = i.mean(axis=0)
+	t_sort = sorted(t, key=lambda p: atan2(p[1]-c[1], p[0]-c[0]) )
 	# filter list causing werid interpolate
 	# TODO
 
