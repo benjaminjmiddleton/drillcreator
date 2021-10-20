@@ -159,6 +159,7 @@ set2 = [(x[0],x[1] + 8) for x in set2] # translation
 
 print("PERMUTATING")
 p = getPermutations(players, set1, set2)
+print(p)
 print("CALCULATING SCORES");
 rankings = [rankTransition(set1,s2,8) for s2 in p]
 print("SORTING RANKINGS")
