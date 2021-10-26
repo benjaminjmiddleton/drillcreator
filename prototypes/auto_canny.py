@@ -42,40 +42,35 @@ ap.add_argument("-i", "--images", required=True,
 args = vars(ap.parse_args())
 
 # loop over the images
-for imagePath in glob.glob(args["images"] + "/*square.png"):
+for imagePath in glob.glob(args["images"] + "/*bearcat.png"):
 	# load the image, convert it to grayscale, and blur it slightly
 	image = cv2.imread(imagePath)
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
-	# apply Canny edge detection using a wide threshold, tight
-	# threshold, and automatically determined threshold
-	wide = cv2.Canny(blurred, 10, 200)
-	tight = cv2.Canny(blurred, 225, 250)
+	# apply Canny edge detection using a automatically determined threshold
 	auto = auto_canny(blurred)
 
-	i = np.argwhere(wide == 255)
-	t = tuple(map(tuple, i))
-	c = i.mean(axis=0)
-	t_sort = sorted(t, key=lambda p: atan2(p[1]-c[1], p[0]-c[0]) )
-	# filter list causing werid interpolate
-	# TODO
-
-	line = LineString(t_sort)
-	n = 80 # num points
-	distances = np.linspace(0, line.length, n)
-	points = [line.interpolate(distance) for distance in distances]
-	new_line = LineString(points)
-
-	x,y = new_line.xy
-	print(len(i[:,0]))
-	plt.scatter(i[:,0], i[:,1])
-	plt.scatter(x, y)
+	_, threshold = cv2.threshold(auto, 127, 255, cv2.THRESH_BINARY)
+	contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	i = 0
+	for contour in contours:
+  
+		# here we are ignoring first counter because 
+		# findcontour function detects whole image as shape
+		if i == 0:
+			i = 1
+			continue
+	
+		t = np.reshape(contour, (-1,2))  
+	
+		if t.size > 2:
+			line = LineString(t)
+			n = 80 # num points
+			distances = np.linspace(0, line.length, n)
+			points = [line.interpolate(distance) for distance in distances]
+			new_line = LineString(points)
+			x, y = new_line.xy
+			plt.scatter(x, y)
+	plt.gca().invert_yaxis()
 	plt.show()
-
-	# show the images
-	resize1 = ResizeWithAspectRatio(image, height=360)
-	# cv2.imshow("Original", resize1)
-	resize2 = ResizeWithAspectRatio(np.hstack([wide, tight, auto]), height=360)
-	# cv2.imshow("Edges", resize2)
-	cv2.waitKey(0)
