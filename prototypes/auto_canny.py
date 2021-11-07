@@ -1,12 +1,8 @@
-import argparse
 import glob
-from math import atan2
 
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 from shapely.geometry import LineString
-from shapely.ops import unary_union
 
 
 def auto_canny(image, sigma=0.33):
@@ -21,56 +17,51 @@ def auto_canny(image, sigma=0.33):
 	# return the edged image
 	return edged
 
-def ResizeWithAspectRatio(image, width=None, height=None, inter=cv2.INTER_AREA):
-    dim = None
-    (h, w) = image.shape[:2]
-
-    if width is None and height is None:
-        return image
-    if width is None:
-        r = height / float(h)
-        dim = (int(w * r), height)
-    else:
-        r = width / float(w)
-        dim = (width, int(h * r))
-
-    return cv2.resize(image, dim, interpolation=inter)
-
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--images", required=True,
-	help="path to input dataset of images")
-args = vars(ap.parse_args())
-
 # loop over the images
-for imagePath in glob.glob(args["images"] + "/*bearcat.png"):
+for imagePath in glob.glob("./*.png"):
+	# Init
+	total = 0
+	ntotal = 0
+	run = 1
+	num_points = 260
+
 	# load the image, convert it to grayscale, and blur it slightly
 	image = cv2.imread(imagePath)
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
+	h, w = image.shape[:2]
+	vis = np.zeros((h, w, 3), np.uint8)
+
 	# apply Canny edge detection using a automatically determined threshold
 	auto = auto_canny(blurred)
 
-	_, threshold = cv2.threshold(auto, 127, 255, cv2.THRESH_BINARY)
-	contours, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-	i = 0
+	# Don't really get this but is matters
+	threshold = cv2.threshold(auto,0,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)[1]
+
+	contours, heirarchy = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	
+	# Get total number of points in contours
 	for contour in contours:
-  
-		# here we are ignoring first counter because 
-		# findcontour function detects whole image as shape
-		if i == 0:
-			i = 1
-			continue
-	
+		total += contour.size
+
+	for contour in contours:
+		# reshape array to include tuples
 		t = np.reshape(contour, (-1,2))  
-	
-		if t.size > 2:
+		n = int(num_points*(contour.size/total)) # num points to add for countour
+		if t.size > 2 and n > 1:
 			line = LineString(t)
-			n = 80 # num points
+			ntotal += n
+			# make last contour have any extra points
+			if run == len(contours):
+				n += (num_points - ntotal)
 			distances = np.linspace(0, line.length, n)
+			# Points along coontour
 			points = [line.interpolate(distance) for distance in distances]
 			new_line = LineString(points)
 			x, y = new_line.xy
-			plt.scatter(x, y)
-	plt.gca().invert_yaxis()
-	plt.show()
+			vis[np.asarray(y, int), np.asarray(x, int)] = (255,255,255)
+		run += 1
+	vis = np.concatenate((image, vis), axis=1)
+	cv2.imshow(imagePath, vis)
+	cv2.waitKey(0)
