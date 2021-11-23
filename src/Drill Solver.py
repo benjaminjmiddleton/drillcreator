@@ -14,6 +14,7 @@ def subtractCoordinate(a,b):
     
 def scaleCoordinate(a, scale1, scale2):
     """Returns scaled 2-tuple based of x and y scales initial and final scales, given as 2-tuples"""
+    scale2 = (max(scale2[0], 1e-100), max(scale2[1], 1e-100))
     return (a[0]*scale1[0]/scale2[0], a[1]*scale1[1]/scale2[1])
     
 def averageSetCenter(s):
@@ -37,54 +38,38 @@ def averageSetDistance(s, center):
 
 
 
-def getPermutations(players, set1, set2):
-    """Returns all not obviously wrong transitions between lists of 2-tuples set1 and set2 as a list, players currently unused
-    Each result in list will be a permutation of set2 where the index corresponds to the same index in set1"""
-
-    def check(targetSet, possibilities):
-        """Checks to make sure all elements in targetSet appear at least once, returns true if all elements are present else false"""
-        for s in targetSet:
-            isPresent = False;
-            for p in possibilities:
-                if s in p:
-                    isPresent = True;
-                    break;
-            if (isPresent):
-                continue;
-            return 0;
-        return 1;
+def getRoughTransition(players, set1, set2):
+    """Returns a rough estimation of the transition by applying the translation and scale between the 2 sets to set1 and ranking possible destinations for each player. 
+    These destinations are then allocated to minimize overall distance from that rough target set"""
                    
         
-    
-    def permutate(steps, permutations = []):
-        """Returns list of all permutations from a list of lists which consist of the valid destinations of each marcher represented as 2-tuples
-        Removes elements that have repeats"""
+    def alocate(set1, targets, spots):
+        oneToTwo = {x: None for x in set1}
+        twoToOne = {x: None for x in spots[set1[0]]}
+        ranks = {x: 0 for x in set1}
+        conflict = None
         
-        if len(steps) == 0:
-            return permutations
-        if len(permutations) == 0:
-            target = steps[0]
-            steps.remove(target)
-            return permutate(steps, [[x] for x in target])
-        result = [];
-        target = steps[0]
-        steps.remove(target)
-        for p in permutations:
-            for s in target:
-                if s not in p:
-                    newP = copy.deepcopy(p)
-                    newP.append(s)
-                    result.append(newP)
-        print(len(result))
-        return permutate(steps, result)
-    
-    distances = [];
-    for s1 in set1:
-        for s2 in set2:
-            distances.append(calculateDistance(s1,s2));
-    
-    mean = sum(distances) / len(distances)
-    std = (sum([((x - mean)**2) for x in distances]) / len(distances))**.5
+        for s in set1:
+            conflict = s;
+            while(conflict is not None):
+                if twoToOne[spots[conflict][ranks[conflict]]] == None:
+                    oneToTwo[conflict] = spots[conflict][ranks[conflict]]
+                    twoToOne[oneToTwo[conflict]] = conflict;
+                    conflict = None
+                else:
+                    a = conflict;
+                    b = twoToOne[spots[s][ranks[s]]];
+                    if calculateDistance(targets[a], spots[a][ranks[a]]) + calculateDistance(targets[b], spots[b][ranks[b] + 1]) < calculateDistance(targets[a], spots[a][ranks[a] + 1]) + calculateDistance(targets[b], spots[b][ranks[b]]):                   
+                        oneToTwo[a] = oneToTwo[b]
+                        oneToTwo[b] = None;
+                        ranks[b] += 1;
+                        conflict = b;
+                        twoToOne[oneToTwo[a]] = a;
+                    else:
+                        ranks[a] += 1;
+                        conflict = a;
+                        
+        return [oneToTwo[x] for x in set1];
     
     s1Average = averageSetCenter(set1);
     s1Scale = averageSetDistance(set1, s1Average);
@@ -92,77 +77,84 @@ def getPermutations(players, set1, set2):
     s2Scale = averageSetDistance(set2, s2Average);
     
     candidates = {}
-    possibilities = [];
+    targets = {}
     for s1 in set1:
         
         translationToCenter1 = subtractCoordinate(s1Average, s1);
         translationFromCenter2 = scaleCoordinate(translationToCenter1, s2Scale, s1Scale);
-        target = subtractCoordinate(s2Average, translationFromCenter2)
+        target = subtractCoordinate(s2Average, translationFromCenter2)      
         
         spots = copy.copy(set2);
-        
         spots.sort(key=lambda x: calculateDistance(target, x));
-        
+
         candidates[s1] = spots;
-        maxDistance = calculateDistance(target, spots[0])
-        firstOut = 1;
-        while(firstOut < len(spots) and calculateDistance(target, spots[firstOut]) < max(4,maxDistance*1.5)):
-            firstOut += 1;
-        temp = spots[:firstOut*2];
-        possibilities.append(temp)   
-    
-    return permutate(possibilities)
+        targets[s1] = target; 
+        
+    return alocate(set1, targets, candidates)
     
     
-def rankTransition(s1, s2, counts):
-    """Returns score for transition from lists of 2-tuples set1 and set2 in an integer number of counts where 0 is best"""
+def fixTransitions(s1, s2, counts, previousBest = None):
+    """Returns set with least amount of collisions obtainable from swapping"""
     
         
     def calculateCollisions(s1, s2, counts):
-        """Returns the number of collisions during transition, defined as being within 1 step of another player for 1 count"""
+        """Returns list of collisions as a list of the format [a1,b1,...,an,bn], where adjacent a/b pairs are a the indecies of the players in the collision and every index can only appear once"""
+        """Collisions are defined as being within 1 step of another player for 1 count"""
         def updatePlayer(t1, t2, c):
             """Returns set for next count based on linear transitions between sets"""
             return (t1[0] + (t2[0] - t1[0]) / c, t1[1] + (t2[1] - t1[1]) / c)
             
-        collisionCount = 0
+        collisions = [];
         for i in range(counts,0,-1):
             for j in range(len(s1)):
                 for k in range(j):
                     d = calculateDistance(s1[j],s1[k])
                     if d < 1:
-                        collisionCount += 1;
+                        if j not in collisions and k not in collisions:
+                            collisions.append(j);
+                            collisions.append(k);
                     
             s1 = [updatePlayer(s1[p], s2[p], i) for p in range(min(len(s1),len(s2)))]
-        return collisionCount;
+        return collisions;
         
-    distance = 0
-    maxDistance = 0    
-    for i in range(min(len(s1), len(s2))):
-        d = calculateDistance(s1[i], s2[i])
-        distance += d
-        maxDistance = max(d, maxDistance)
+    def swap(drillSet, i1, i2):
+        """Swaps the elements of drillSet at indexes i1 and i2"""
+        temp = drillSet[i1];
+        drillSet[i1] = drillSet[i2];
+        drillSet[i2] = temp
+        return drillSet;
+    
+    
     collisions = calculateCollisions(s1, s2, counts)
-    score = distance / len(s1) + maxDistance + collisions*1000000
-    return (score, s2)
-
+    print(f"COLLISIONS COUNT: {len(collisions) // 2}");
+    if len(collisions) == 0:
+        print("NO COLLISIONS");
+        return s2;
+    if previousBest and s2 == previousBest[1]:
+        print("COLLISION LOOP DETECTED")
+        return s2;
+    if previousBest == None or previousBest[0] > len(collisions) // 2:
+        previousBest = (len(collisions) // 2, copy.deepcopy(s2))
+    for i in range(len(collisions) // 2):
+        s2 = swap(s2, collisions[i*2], collisions[i*2 + 1]);
+    return fixTransitions(s1, s2, counts, previousBest);
+    
 players = ["A","B","C","D"] 
-set1 = [(x*8,y*8) for x in range(0, 2) for y in range(2)] # 8 step grid
+set1 = [(x*4,y*4) for x in range(-4,4) for y in range(1)] # 4 step grid
 
 """Each line applies a different translation to set2, starting with copying set1"""
 set2 = [x for x in set1] # static set
 
-set2 = [(x[0],x[1] + 8) for x in set2] # translation
-#set2 = [(x[0]*1.2,x[1]*1.2) for x in set2] # expansion
+#set2 = [(x[0],x[1] + 8) for x in set2] # translation
+#set2 = [(x[0]*2,x[1]*2) for x in set2] # expansion
 #set2 = [(x[1], x[0]) for x  in set2] # rotation
-#set2 = [(x[0] - 8 if x[0] < 0 else x[0] + 8, x[1]) for x in set2] # split
+set2 = [(x[0] - 8 if x[0] < 0 else x[0] + 8, x[1]) for x in set2] # split
 #set2 = [(x[0], x[1] + x[0]/8) for x  in set2] # skew
+print(set1)
 
-print("PERMUTATING")
-p = getPermutations(players, set1, set2)
-print("CALCULATING SCORES");
-rankings = [rankTransition(set1,s2,8) for s2 in p]
-print("SORTING RANKINGS")
-rankings.sort(key=lambda tup: tup[0])
-
-for r in rankings[:10]:
-    print(r)
+print("CALCULATING ROUGH TRANSITION")
+roughSet = getRoughTransition(players, set1, set2)
+print(roughSet)
+print("RESOLVING COLLISIONS");
+fixedSet = fixTransitions(set1,roughSet,8)
+print(fixedSet);
