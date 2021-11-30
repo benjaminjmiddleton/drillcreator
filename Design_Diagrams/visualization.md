@@ -6,8 +6,8 @@ giving us the “Final Transition.” Notice that the rough transition has switc
 causing a collision, and that this is fixed in the Final Transition.
 
 ### Input Set
-![Input Set](assets/input_set.png "Input Set")
+![Input Set](../assets/input_set.png "Input Set")
 ### Rough Transition and Allocation
-![Rough Transition and Allocation](assets/rough_transition.png "Rough Transition and Allocation")
+![Rough Transition and Allocation](../assets/rough_transition.png "Rough Transition and Allocation")
 ### Final Transition
-![Final Transition](assets/final_transition.png "Final Transition")
+![Final Transition](../assets/final_transition.png "Final Transition")
