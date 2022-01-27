@@ -13,6 +13,8 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QMainWindow
 
+from Coordinate import Coordinate, hashmark, yardline
+
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -28,10 +30,14 @@ class MainWindow(QMainWindow):
         sc = MplCanvas(self, width=5, height=4, dpi=100)
         img = plt.imread('ui/field.png')
         sc.axes.imshow(img)
-        sc.axes.plot(300, 100, 'rx')
-        sc.axes.plot(500, 100, 'gx')
-        sc.axes.plot(300, 300, 'bx')
-        sc.axes.plot(500, 300, 'yx')
+
+        FIELD_SIZE = (889, 397)
+        coord = Coordinate(4, yardline.A45, 0, hashmark.FH)
+        sc.axes.plot(coord.get_x(FIELD_SIZE[0]), coord.get_y(FIELD_SIZE[1]), 'rx')
+        # sc.axes.plot(300, 100, 'rx')
+        # sc.axes.plot(500, 100, 'gx')
+        # sc.axes.plot(300, 300, 'bx')
+        # sc.axes.plot(500, 300, 'yx')
         self.setCentralWidget(sc)
 
         self.show()
