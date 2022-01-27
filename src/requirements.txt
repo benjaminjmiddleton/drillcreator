@@ -1,3 +1,5 @@
 opencv-python
 numpy
 Shapely
+matplotlib
+PyQt5

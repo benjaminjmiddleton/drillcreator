@@ -17,8 +17,9 @@ def auto_canny(image, sigma=0.33):
 	# return the edged image
 	return edged
 
-# loop over the images
-for imagePath in glob.glob("./test_images/*"):
+if __name__ == "__main__":
+	# loop over the images
+	for imagePath in glob.glob("./test_images/*"):
 	# Init
 	total = 0
 	ntotal = 0
@@ -40,7 +41,7 @@ for imagePath in glob.glob("./test_images/*"):
 	threshold = cv2.threshold(auto,0,255,cv2.THRESH_OTSU + cv2.THRESH_BINARY)[1]
 
 	contours, heirarchy = cv2.findContours(threshold, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-	
+
 	# Get total number of points in contours
 	for contour in contours:
 		total += contour.size
