@@ -138,23 +138,24 @@ def fixTransitions(s1, s2, counts, previousBest = None):
     for i in range(len(collisions) // 2):
         s2 = swap(s2, collisions[i*2], collisions[i*2 + 1]);
     return fixTransitions(s1, s2, counts, previousBest);
-    
-players = ["A","B","C","D"] 
-set1 = [(x*4,y*4) for x in range(-4,4) for y in range(1)] # 4 step grid
 
-"""Each line applies a different translation to set2, starting with copying set1"""
-set2 = [x for x in set1] # static set
+if __name__ == "__main__":
+    players = ["A","B","C","D"] 
+    set1 = [(x*4,y*4) for x in range(-4,4) for y in range(1)] # 4 step grid
 
-#set2 = [(x[0],x[1] + 8) for x in set2] # translation
-#set2 = [(x[0]*2,x[1]*2) for x in set2] # expansion
-#set2 = [(x[1], x[0]) for x  in set2] # rotation
-set2 = [(x[0] - 8 if x[0] < 0 else x[0] + 8, x[1]) for x in set2] # split
-#set2 = [(x[0], x[1] + x[0]/8) for x  in set2] # skew
-print(set1)
+    """Each line applies a different translation to set2, starting with copying set1"""
+    set2 = [x for x in set1] # static set
 
-print("CALCULATING ROUGH TRANSITION")
-roughSet = getRoughTransition(players, set1, set2)
-print(roughSet)
-print("RESOLVING COLLISIONS");
-fixedSet = fixTransitions(set1,roughSet,8)
-print(fixedSet);
+    #set2 = [(x[0],x[1] + 8) for x in set2] # translation
+    #set2 = [(x[0]*2,x[1]*2) for x in set2] # expansion
+    #set2 = [(x[1], x[0]) for x  in set2] # rotation
+    set2 = [(x[0] - 8 if x[0] < 0 else x[0] + 8, x[1]) for x in set2] # split
+    #set2 = [(x[0], x[1] + x[0]/8) for x  in set2] # skew
+    print(set1)
+
+    print("CALCULATING ROUGH TRANSITION")
+    roughSet = getRoughTransition(players, set1, set2)
+    print(roughSet)
+    print("RESOLVING COLLISIONS");
+    fixedSet = fixTransitions(set1,roughSet,8)
+    print(fixedSet);
