@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import numpy as np
+import copy
 
 import image_interpreter as ii
 import drill_solver as ds
@@ -14,8 +15,9 @@ print("CALCULATING ROUGH TRANSITION")
 roughSet, candidates = ds.getRoughTransition([], output1, output2)
 print("ALLOCATING SPOTS");
 allocatedSet  = ds.alocateTransition(output1, roughSet, candidates);
+realAllocated = copy.copy(allocatedSet)
 print("RESOLVING COLLISIONS")
-fixedSet = ds.fixTransitions(output1,allocatedSet,8)
+fixedSet = ds.fixTransitions(output1,allocatedSet,64)
 
 # Display PLOT
 x, y = map(list,zip(*output1))
@@ -34,7 +36,7 @@ x, y = map(list,zip(*[roughSet[x] for x in roughSet.keys()]));
 ax2.scatter(x, y, color=colormap[categories]);
 ax2.invert_yaxis();
 
-x, y = map(list,zip(*allocatedSet))
+x, y = map(list,zip(*realAllocated))
 ax3.set_title("allocated")
 ax3.scatter(x, y, color=colormap[categories])
 ax3.invert_yaxis()
