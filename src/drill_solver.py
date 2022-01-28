@@ -74,7 +74,7 @@ def alocateTransition(set1, targets, spots):
         
         spotsToAllocate = copy.copy(set1);
         
-        spotsToAllocate.sort(key=lambda x: calculateDistance(x, spots[x][0]), reverse=False);
+        spotsToAllocate.sort(key=lambda x: calculateDistance(targets[x], spots[x][0]), reverse=True);
         
         for s in spotsToAllocate:
             conflict = s;
