@@ -42,12 +42,66 @@ def averageSetDistance(s, center):
 def getRoughTransition(players, set1, set2):
     """Returns a rough estimation of the transition by applying the translation and scale between the 2 sets to set1 and ranking possible destinations for each player. 
     These destinations are then allocated to minimize overall distance from that rough target set"""
+    
+    def averagePlace(main, lr, tb):
+        weights = [1,1,1]
+        return ((main[0]*weights[0] + lr[0]*weights[1] + tb[0]*weights[2])/sum(weights), (main[1]*weights[0] + lr[1]*weights[1] + tb[1]*weights[2])/sum(weights))
                    
     
     s1Average = averageSetCenter(set1);
     s1Scale = averageSetDistance(set1, s1Average);
+    
+    s1Left = []
+    s1Right = []
+    s1Top = []
+    s1Bottom = [];
+    for s in set1:
+        if s[0] < s1Average[0]:
+            s1Left.append(s);
+        else:
+            s1Right.append(s);
+        if s[1] > s1Average[1]:
+            s1Bottom.append(s);
+        else:
+            s1Top.append(s);
+            
+            
+            
+    s1LeftAverage = averageSetCenter(s1Left);
+    s1LeftScale = averageSetDistance(s1Left, s1LeftAverage);
+    s1RightAverage = averageSetCenter(s1Right);
+    s1RightScale = averageSetDistance(s1Right, s1RightAverage);
+    s1TopAverage = averageSetCenter(s1Top);
+    s1TopScale = averageSetDistance(s1Top, s1Average);
+    s1BottomAverage = averageSetCenter(s1Bottom);
+    s1BottomScale = averageSetDistance(s1Bottom, s1BottomAverage);
+            
     s2Average = averageSetCenter(set2);
     s2Scale = averageSetDistance(set2, s2Average);
+    
+    s2Left = []
+    s2Right = []
+    s2Top = []
+    s2Bottom = [];
+    for s in set2:
+        if s[0] < s2Average[0]:
+            s2Left.append(s);
+        else:
+            s2Right.append(s);
+        if s[1] > s2Average[1]:
+            s2Bottom.append(s);
+        else:
+            s2Top.append(s);
+            
+            
+    s2LeftAverage = averageSetCenter(s2Left);
+    s2LeftScale = averageSetDistance(s2Left, s2LeftAverage);
+    s2RightAverage = averageSetCenter(s2Right);
+    s2RightScale = averageSetDistance(s2Right, s2RightAverage);
+    s2TopAverage = averageSetCenter(s2Top);
+    s2TopScale = averageSetDistance(s2Top, s2Average);
+    s2BottomAverage = averageSetCenter(s2Bottom);
+    s2BottomScale = averageSetDistance(s2Bottom, s2BottomAverage);
     
     candidates = {}
     targets = {}
@@ -55,7 +109,28 @@ def getRoughTransition(players, set1, set2):
         
         translationToCenter1 = subtractCoordinate(s1Average, s1);
         translationFromCenter2 = scaleCoordinate(translationToCenter1, s2Scale, s1Scale);
-        target = subtractCoordinate(s2Average, translationFromCenter2)      
+        mainTarget = subtractCoordinate(s2Average, translationFromCenter2)
+        
+        s1LRAvereage = s1LeftAverage if s1 in s1Left else s1RightAverage;
+        s1LRScale = s1LeftScale if s1 in s1Left else s1RightScale;
+        s2LRAvereage = s2LeftAverage if s1 in s1Left else s2RightAverage;
+        s2LRScale = s2LeftScale if s1 in s1Left else s2RightScale;
+        
+        translationToCenter1 = subtractCoordinate(s1LRAvereage, s1);
+        translationFromCenter2 = scaleCoordinate(translationToCenter1, s2LRScale, s1LRScale);
+        lrTarget = subtractCoordinate(s2LRAvereage, translationFromCenter2)
+        
+        s1TBAvereage = s1BottomAverage if s1 in s1Bottom else s1TopAverage;
+        s1TBScale = s1BottomScale if s1 in s1Bottom else s1TopScale;
+        s2TBAvereage = s2BottomAverage if s1 in s1Bottom else s2TopAverage;
+        s2TBScale = s2BottomScale if s1 in s1Bottom else s2TopScale;
+        
+        translationToCenter1 = subtractCoordinate(s1TBAvereage, s1);
+        translationFromCenter2 = scaleCoordinate(translationToCenter1, s2TBScale, s1TBScale);
+        tbTarget = subtractCoordinate(s2TBAvereage, translationFromCenter2)
+        
+        target = averagePlace(mainTarget, lrTarget, tbTarget);
+        
         
         spots = copy.copy(set2);
         spots.sort(key=lambda x: calculateDistance(target, x));
