@@ -27,6 +27,7 @@ def averageSetCenter(s):
         y += s[i][1]
     return (x/len(s), y/len(s));
     
+    
 def averageSetDistance(s, center):
     """Returns the average distance of the 2-tuple elements of a list s from the 2-tuple center in both the x and y directions as a 2-tuple (xScale, uScale)"""
     x = 0;
@@ -71,7 +72,11 @@ def alocateTransition(set1, targets, spots):
         ranks = {x: 0 for x in set1}
         conflict = None
         
-        for s in set1:
+        spotsToAllocate = copy.copy(set1);
+        
+        spotsToAllocate.sort(key=lambda x: calculateDistance(x, spots[x][0]), reverse=False);
+        
+        for s in spotsToAllocate:
             conflict = s;
             while(conflict is not None):
                 if twoToOne[spots[conflict][ranks[conflict]]] == None:
@@ -142,7 +147,7 @@ def fixTransitions(s1, s2, counts, previousBest = None):
 
 if __name__ == "__main__":  
     players = ["A","B","C","D"] 
-    set1 = [(x*4,y*4) for x in range(-4,4) for y in range(1)] # 4 step grid
+    set1 = [(x*4,y*4) for x in range(-4,4) for y in range(5)] # 4 step grid
 
     """Each line applies a different translation to set2, starting with copying set1"""
     set2 = [x for x in set1] # static set
@@ -155,8 +160,9 @@ if __name__ == "__main__":
     print(set1)
 
     print("CALCULATING ROUGH TRANSITION")
-    roughSet = getRoughTransition(players, set1, set2)
-    print(roughSet)
+    roughSet, candidates = getRoughTransition(players, set1, set2)
+    print("ALLOCATING")
+    allocatedSet  = alocateTransition(set1, roughSet, candidates);
     print("RESOLVING COLLISIONS");
-    fixedSet = fixTransitions(set1,roughSet,8)
+    fixedSet = fixTransitions(set1,allocatedSet,8)
     print(fixedSet);
