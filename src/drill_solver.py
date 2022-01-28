@@ -32,8 +32,8 @@ def averageSetDistance(s, center):
     x = 0;
     y = 0;
     for p in s:
-        x = abs(center[0] - p[0]);
-        y = abs(center[1] - p[1])
+        x += abs(center[0] - p[0]);
+        y += abs(center[1] - p[1])
     return (x / len(s), y / len(s))
 
 
@@ -42,34 +42,6 @@ def getRoughTransition(players, set1, set2):
     """Returns a rough estimation of the transition by applying the translation and scale between the 2 sets to set1 and ranking possible destinations for each player. 
     These destinations are then allocated to minimize overall distance from that rough target set"""
                    
-        
-    def alocate(set1, targets, spots):
-        oneToTwo = {x: None for x in set1}
-        twoToOne = {x: None for x in spots[set1[0]]}
-        ranks = {x: 0 for x in set1}
-        conflict = None
-        
-        for s in set1:
-            conflict = s;
-            while(conflict is not None):
-                if twoToOne[spots[conflict][ranks[conflict]]] == None:
-                    oneToTwo[conflict] = spots[conflict][ranks[conflict]]
-                    twoToOne[oneToTwo[conflict]] = conflict;
-                    conflict = None
-                else:
-                    a = conflict;
-                    b = twoToOne[spots[s][ranks[s]]];
-                    if calculateDistance(targets[a], spots[a][ranks[a]]) + calculateDistance(targets[b], spots[b][ranks[b] + 1]) < calculateDistance(targets[a], spots[a][ranks[a] + 1]) + calculateDistance(targets[b], spots[b][ranks[b]]):                   
-                        oneToTwo[a] = oneToTwo[b]
-                        oneToTwo[b] = None;
-                        ranks[b] += 1;
-                        conflict = b;
-                        twoToOne[oneToTwo[a]] = a;
-                    else:
-                        ranks[a] += 1;
-                        conflict = a;
-                        
-        return [oneToTwo[x] for x in set1];
     
     s1Average = averageSetCenter(set1);
     s1Scale = averageSetDistance(set1, s1Average);
@@ -86,11 +58,40 @@ def getRoughTransition(players, set1, set2):
         
         spots = copy.copy(set2);
         spots.sort(key=lambda x: calculateDistance(target, x));
+        
 
         candidates[s1] = spots;
-        targets[s1] = target; 
+        targets[s1] = target;
+    return targets, candidates
+    
+    
+def alocateTransition(set1, targets, spots):
+        oneToTwo = {x: None for x in set1}
+        twoToOne = {x: None for x in spots[set1[0]]}
+        ranks = {x: 0 for x in set1}
+        conflict = None
         
-    return alocate(set1, targets, candidates)
+        for s in set1:
+            conflict = s;
+            while(conflict is not None):
+                if twoToOne[spots[conflict][ranks[conflict]]] == None:
+                    oneToTwo[conflict] = spots[conflict][ranks[conflict]]
+                    twoToOne[oneToTwo[conflict]] = conflict;
+                    conflict = None
+                else:
+                    a = conflict;
+                    b = twoToOne[spots[s][ranks[s]]];
+                    if calculateDistance(a, spots[a][ranks[a]]) - calculateDistance(b, spots[b][ranks[b] + 1]) < calculateDistance(a, spots[a][ranks[a] + 1]) + calculateDistance(b, spots[b][ranks[b]]):                   
+                        oneToTwo[a] = oneToTwo[b]
+                        oneToTwo[b] = None;
+                        ranks[b] += 1;
+                        conflict = b;
+                        twoToOne[oneToTwo[a]] = a;
+                    else:
+                        ranks[a] += 1;
+                        conflict = a;
+                        
+        return [oneToTwo[x] for x in set1];    
     
     
 def fixTransitions(s1, s2, counts, previousBest = None):
