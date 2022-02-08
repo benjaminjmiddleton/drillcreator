@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
 
     def new(self):
         file_tuple = QFileDialog.getOpenFileName(self, "Open Performer File", self.last_dir, "Performer Files (*.pf)")
-        if file_tuple:
+        if file_tuple[0] != '':
             self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             self.loaded_show = Show(Show.load_performers(file_tuple[0]))
 
