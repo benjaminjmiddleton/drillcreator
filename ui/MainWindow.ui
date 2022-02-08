@@ -39,8 +39,8 @@
      <property name="title">
       <string>New</string>
      </property>
+     <addaction name="actionBand"/>
      <addaction name="actionShow"/>
-     <addaction name="actionShow_2"/>
     </widget>
     <addaction name="menuNew"/>
     <addaction name="actionOpen"/>
@@ -99,12 +99,12 @@
     <string>Field</string>
    </property>
   </action>
-  <action name="actionShow">
+  <action name="actionBand">
    <property name="text">
     <string>Band</string>
    </property>
   </action>
-  <action name="actionShow_2">
+  <action name="actionShow">
    <property name="text">
     <string>Show</string>
    </property>
