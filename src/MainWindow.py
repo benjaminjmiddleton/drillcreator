@@ -66,8 +66,8 @@ class MainWindow(QMainWindow):
         
         self.setCentralWidget(sc)
 
-        self.actionNew.triggered.connect(self.new)
-        self.actionOpen.triggered.connect(self.open)
+        self.menuNew.actions()[0].triggered.connect(self.new_band)
+        self.menuNew.actions()[0].triggered.connect(self.new_show)
 
         self.menuAdd_Drillset.actions()[0].triggered.connect(self.add_set_from_image)
         self.menuAdd_Drillset.actions()[1].triggered.connect(self.add_empty_set)
@@ -105,11 +105,14 @@ class MainWindow(QMainWindow):
         settings.setValue("loaded_show", self.loaded_show)
         settings.endGroup()
 
-    def new(self):
+    def new_show(self):
         file_tuple = QFileDialog.getOpenFileName(self, "Open Performer File", self.last_dir, "Performer Files (*.pf)")
         if file_tuple[0] != '':
             self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             self.loaded_show = Show(Show.load_performers(file_tuple[0]))
+
+    def new_band(self):
+        pass
 
     def open(self):
         print('open')

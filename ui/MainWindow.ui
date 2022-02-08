@@ -35,20 +35,30 @@
      <addaction name="actionEmpty_Set"/>
      <addaction name="actionCopy_Current"/>
     </widget>
-    <addaction name="actionNew"/>
+    <widget class="QMenu" name="menuNew">
+     <property name="title">
+      <string>New</string>
+     </property>
+     <addaction name="actionShow"/>
+     <addaction name="actionShow_2"/>
+    </widget>
+    <addaction name="menuNew"/>
     <addaction name="actionOpen"/>
     <addaction name="menuAdd_Drillset"/>
     <addaction name="separator"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionInstrumentation"/>
+    <addaction name="actionField"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
   </widget>
-  <action name="actionNew">
-   <property name="text">
-    <string>New</string>
-   </property>
-  </action>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
@@ -77,6 +87,26 @@
   <action name="actionCopy_Current">
    <property name="text">
     <string>Copy Current</string>
+   </property>
+  </action>
+  <action name="actionInstrumentation">
+   <property name="text">
+    <string>Instrumentation</string>
+   </property>
+  </action>
+  <action name="actionField">
+   <property name="text">
+    <string>Field</string>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Band</string>
+   </property>
+  </action>
+  <action name="actionShow_2">
+   <property name="text">
+    <string>Show</string>
    </property>
   </action>
  </widget>
