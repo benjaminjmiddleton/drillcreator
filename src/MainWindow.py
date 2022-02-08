@@ -143,3 +143,8 @@ class MainWindow(QMainWindow):
 #
 # add_set_from_image (this will integrate both the image converter and the drill solver. If the loaded show has a
 # pre-existing drillset, we need to allocate the performers to the new shape using the drill solver.)
+
+# TODO Status Bar
+# There should be a status bar at the bottom of the main window that shows the latest/current functions being performed
+# by the application. For example, when solving a particularly complex drill, a message will appear stating as much. Or
+# if a file was just saved, that status bar will say "File saved as 'Fake Path To File'".
