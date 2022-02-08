@@ -33,6 +33,7 @@
      </property>
      <addaction name="actionFrom_Image"/>
      <addaction name="actionEmpty_Set"/>
+     <addaction name="actionCopy_Current"/>
     </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
@@ -71,6 +72,11 @@
   <action name="actionEmpty_Set">
    <property name="text">
     <string>Empty Set</string>
+   </property>
+  </action>
+  <action name="actionCopy_Current">
+   <property name="text">
+    <string>Copy Current</string>
    </property>
   </action>
  </widget>

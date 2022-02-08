@@ -19,7 +19,7 @@ def auto_canny(image, sigma=0.33):
 
 if __name__ == "__main__":
 	# loop over the images
-	for imagePath in glob.glob("./test_images/*"):
+	for imagePath in glob.glob("./src/test_images/*"):
 		# Init
 		total = 0
 		ntotal = 0
