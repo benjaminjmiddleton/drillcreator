@@ -107,9 +107,9 @@ class MainWindow(QMainWindow):
 
     def new(self):
         file_tuple = QFileDialog.getOpenFileName(self, "Open Performer File", self.last_dir, "Performer Files (*.pf)")
-        print(file_tuple)
-        self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
-        self.loaded_show = Show(Show.load_performers(file_tuple[0]))
+        if file_tuple:
+            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            self.loaded_show = Show(Show.load_performers(file_tuple[0]))
 
     def open(self):
         print('open')
