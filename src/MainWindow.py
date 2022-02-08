@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 # qt
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-from PyQt5.QtCore import QSettings, QFileInfo
+from PyQt5.QtCore import QSettings, QFileInfo, QPoint
 
 # drillcreator
 from Coordinate import Coordinate, hashmark, yardline
@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
     def read_settings(self):
         settings = QSettings("University of Cincinnati", "drillcreator")
 
-        pos = settings.value("MainWindow/pos", defaultValue=(0,0))
+        pos = settings.value("MainWindow/pos", defaultValue=QPoint(0,0))
         size = settings.value("MainWindow/size", defaultValue=self.FIELD_SIZE)
         self.setGeometry(pos.x(), pos.y(), size[0], size[1])
 
