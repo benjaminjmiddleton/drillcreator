@@ -1,3 +1,5 @@
+from os.path import expanduser
+
 # matplotlib
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -88,7 +90,7 @@ class MainWindow(QMainWindow):
         size = settings.value("MainWindow/size", defaultValue=self.FIELD_SIZE)
         self.setGeometry(pos.x(), pos.y(), size[0], size[1])
 
-        self.last_dir = settings.value("MainWindow/last_dir", defaultValue="C:/")
+        self.last_dir = settings.value("MainWindow/last_dir", defaultValue=expanduser("~"))
 
         self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue="../data/band1.pf")
     
