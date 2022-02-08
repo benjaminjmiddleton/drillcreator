@@ -84,5 +84,5 @@ class Coordinate:
             coord = _8to5 * self.v_steps + _8to5 * Coordinate.STEPS_FROM_BSL_TO_FSL
         return math.floor(coord)
 
-    def get_pixel_coords(self, field_width, field_height):
-        return (self.get_x(field_width), self.get_y(field_height))
+    def get_pixel_coords(self, field_size):
+        return (self.get_x(field_size[0]), self.get_y(field_size[1]))

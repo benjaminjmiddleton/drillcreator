@@ -74,10 +74,6 @@ class MainWindow(QMainWindow):
         self.actionSave.triggered.connect(self.save)
         self.actionSave_As.triggered.connect(self.save_as)
 
-        # self.menuAdd_Drillset.actionFrom_Image.triggered.connect(self.add_set_from_image)
-        # self.menuAdd_Drillset.actionEmpty_Set.triggered.connect(self.add_empty_set)
-        # self.menuAdd_Drillset.actionCopy_Current.triggered.connect(self.add_copy_of_current_set)
-
         self.read_settings()
 
         self.show()
@@ -130,3 +126,15 @@ class MainWindow(QMainWindow):
     
     def save_as(self):
         print('save')
+
+# TODO this file
+# serialize and deserialize self.loaded_show and .pf files (save(), save_as(), open())
+# add_copy_of_current_set
+
+# TODO major features
+# sidebar that allows stepping through counts/sets and displays drillset info
+# allow editing of a performer's co-ordinate in a drillset
+# performer view (steps through counts/sets with a specific performer highlighted and flips the field view)
+#
+# add_set_from_image (this will integrate both the image converter and the drill solver. If the loaded show has a
+# pre-existing drillset, we need to allocate the performers to the new shape using the drill solver.)
