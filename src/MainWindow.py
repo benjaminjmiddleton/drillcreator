@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
         sc = MplCanvas(self, width=5, height=4, dpi=100)
         img = plt.imread('ui/field.png')
         sc.axes.imshow(img)
+        self.setWindowTitle("Drill Creator")
 
         # PLOT TEST POINTS
         # coord = Coordinate(4, yardline.A45, 0, hashmark.BSL)
