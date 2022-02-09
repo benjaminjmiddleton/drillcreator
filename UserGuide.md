@@ -22,7 +22,7 @@ This document will walk you through the basics of using Drill-Creator.
 4. What is a Dot?
     - A Dot is a specific placement of 1 player within a Set.    
 5. What is a Set?
-    - A set is a specific point of time in a show. Players may stop in a particular set or simply move through it. Transitions are used to move between sets.A
+    - A set is a specific point of time in a show. Players may stop in a particular set or simply move through it. Transitions are used to move between sets.
 6. What is a Step?
     - 1 Step referes to a distance of 22.5". There are 8 Steps for every 5 yards.
 7. What kind of transitions can the program auto generate?
