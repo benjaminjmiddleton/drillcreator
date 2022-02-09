@@ -83,20 +83,14 @@ This document will walk you through the basics of using Drill-Creator.
 ## Other
 
 1. Editing Instrumentation For a Pre-existing Band
-    TODO
-    Edit the number of each instrument you have in your ensemble.
-      
-    Edit > Instrumentation
+    In the "Edit" menu, select Instrumentation. This will open a pop-up which will allow you to edit the number of each instrument you have in your ensemble. This will NOT change the instrumentation of a pre-existing show, just new shows made with the edited band.
     
     ![](assets/edit_instrumentation.png)
 
 2. Editing Hash Locations on Field
-    TODO
-    To switch between NCAA (default), high school and NFL hash marks.
-    
-    Edit > Field
+    To switch between NCAA (default), high school and NFL hash marks, select "Field" from the "Edit" dropdown menu at the top of your screen. This will open a pop-up which will allow you to select the desired field.
 
     ![](assets/edit_field.png)
 
 3. Re-ordering Existing Sets in a show
-    TODO idk
+    Among the bottom toolbar for navigating through your show you will find options to move or delete the current drillset.
