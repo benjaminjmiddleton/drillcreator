@@ -151,12 +151,8 @@ class MainWindow(QMainWindow):
 # serialize and deserialize self.loaded_show and .pf files (save(), save_as(), open()) - this will also mean rewriting Show.load_performers().
 
 # TODO major features
-# large toolbar at the bottom that allows stepping through counts/sets and displays drillset info
+# implement existing buttons and menu bar items
 # allow editing of a performer's co-ordinate in a drillset
-# performer view (steps through counts/sets with a specific performer highlighted and flips the field view)
-#
-# add_set_from_image (this will integrate both the image converter and the drill solver. If the loaded show has a
-# pre-existing drillset, we need to allocate the performers to the new shape using the drill solver.)
 
 # TODO Status Bar
 # There should be a status bar at the bottom of the main window that shows the latest/current functions being performed
