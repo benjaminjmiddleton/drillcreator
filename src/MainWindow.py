@@ -7,9 +7,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-# qt
+# pyqt5
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget, QSizePolicy
 from PyQt5.QtCore import QSettings, QFileInfo, QPoint
 
 # drillcreator
@@ -29,11 +29,27 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         uic.loadUi('ui/MainWindow.ui', self)
-        
+        self.setWindowTitle("Drill Creator")
+
         sc = MplCanvas(self, width=5, height=4, dpi=100)
         img = plt.imread('ui/field.png')
         sc.axes.imshow(img)
-        self.setWindowTitle("Drill Creator")
+
+        navigation_box = QWidget()
+        navigation_box.setMinimumSize(360, 50)
+        uic.loadUi('ui/NavigationBox.ui', navigation_box)
+        policy = QSizePolicy()
+        policy.setVerticalPolicy(QSizePolicy.Fixed)
+        policy.setHorizontalPolicy(QSizePolicy.Expanding)
+        navigation_box.setSizePolicy(policy)
+
+        layout = QVBoxLayout()
+        layout.addWidget(sc)
+        layout.addWidget(navigation_box)
+
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
+        central_widget.setLayout(layout)
 
         # PLOT TEST POINTS
         # coord = Coordinate(4, yardline.A45, 0, hashmark.BSL)
@@ -65,8 +81,6 @@ class MainWindow(QMainWindow):
         # sc.axes.plot(300, 300, 'bx')
         # sc.axes.plot(500, 300, 'yx')
         
-        self.setCentralWidget(sc)
-
         self.menuNew.actions()[0].triggered.connect(self.new_band)
         self.menuNew.actions()[0].triggered.connect(self.new_show)
 
@@ -138,7 +152,7 @@ class MainWindow(QMainWindow):
 # add_copy_of_current_set (need sidebar first)
 
 # TODO major features
-# sidebar that allows stepping through counts/sets and displays drillset info
+# large toolbar at the bottom that allows stepping through counts/sets and displays drillset info
 # allow editing of a performer's co-ordinate in a drillset
 # performer view (steps through counts/sets with a specific performer highlighted and flips the field view)
 #

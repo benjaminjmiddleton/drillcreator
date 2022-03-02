@@ -56,8 +56,16 @@
     <addaction name="actionInstrumentation"/>
     <addaction name="actionField"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionPerformer"/>
+    <addaction name="actionDirector"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -107,6 +115,16 @@
   <action name="actionShow">
    <property name="text">
     <string>Show</string>
+   </property>
+  </action>
+  <action name="actionPerformer">
+   <property name="text">
+    <string>Performer</string>
+   </property>
+  </action>
+  <action name="actionDirector">
+   <property name="text">
+    <string>Director/Audience</string>
    </property>
   </action>
  </widget>
