@@ -25,7 +25,7 @@
    <property name="title">
     <string/>
    </property>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="rightArrowButton">
     <property name="geometry">
      <rect>
       <x>90</x>
@@ -38,7 +38,7 @@
      <string>-&gt;</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="leftArrowButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -51,7 +51,7 @@
      <string>&lt;-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_7">
+   <widget class="QPushButton" name="modeButton">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -64,7 +64,7 @@
      <string>Page Mode</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_8">
+   <widget class="QPushButton" name="informationButton">
     <property name="geometry">
      <rect>
       <x>250</x>

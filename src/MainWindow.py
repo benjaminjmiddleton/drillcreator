@@ -91,6 +91,11 @@ class MainWindow(QMainWindow):
         self.actionSave.triggered.connect(self.save)
         self.actionSave_As.triggered.connect(self.save_as)
 
+        navigation_box.leftArrowButton.clicked.connect(self.previous_set)
+        navigation_box.rightArrowButton.clicked.connect(self.next_set)
+        navigation_box.modeButton.clicked.connect(self.toggle_navigation_mode)
+        navigation_box.informationButton.clicked.connect(self.show_active_set_information)
+
         self.read_settings()
 
         self.show()
@@ -145,6 +150,18 @@ class MainWindow(QMainWindow):
     
     def save_as(self):
         print('save')
+
+    def previous_set(self):
+        print("previous")
+    
+    def next_set(self):
+        print("next")
+    
+    def toggle_navigation_mode(self):
+        print("mode")
+    
+    def show_active_set_information(self):
+        print("info")
 
 # TODO this file
 # serialize and deserialize self.loaded_show and .pf files (save(), save_as(), open()) - this will also mean rewriting Show.load_performers().
