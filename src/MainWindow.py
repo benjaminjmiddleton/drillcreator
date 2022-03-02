@@ -149,7 +149,6 @@ class MainWindow(QMainWindow):
 
 # TODO this file
 # serialize and deserialize self.loaded_show and .pf files (save(), save_as(), open()) - this will also mean rewriting Show.load_performers().
-# add_copy_of_current_set (need sidebar first)
 
 # TODO major features
 # large toolbar at the bottom that allows stepping through counts/sets and displays drillset info
