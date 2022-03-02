@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
 
         self.show()
     
-    def __del__(self):
+    def closeEvent(self, event):
         self.save_settings()
 
     def read_settings(self):
@@ -113,7 +113,6 @@ class MainWindow(QMainWindow):
         settings = QSettings("University of Cincinnati", "drillcreator")
 
         settings.beginGroup("MainWindow")
-        pos = self.frameGeometry().topLeft()
         settings.setValue("pos", self.frameGeometry().topLeft())
         settings.setValue("size", (self.frameGeometry().width(), self.frameGeometry().height()))
         settings.setValue("last_dir", self.last_dir)
