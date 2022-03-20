@@ -135,7 +135,13 @@ class MainWindow(QMainWindow):
         pass
 
     def open(self):
-        print('open')
+        file_tuple = QFileDialog.getOpenFileName(self, "Load Show", self.last_dir, "JSON File (*.json)")
+        if file_tuple[0] != '':
+            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            fp = open(file_tuple[0], 'r')
+            dict = json.load(fp)
+            fp.close()
+            self.loaded_show = Show.fromDict(dict)
     
     def add_set_from_image(self):
         print('from image')
@@ -156,7 +162,6 @@ class MainWindow(QMainWindow):
             fp = open(file_tuple[0], 'w')
             json.dump(self.loaded_show.toDict(), fp, indent="\t")
             fp.close()
-        print('save')
 
     def previous_set(self):
         print("previous")

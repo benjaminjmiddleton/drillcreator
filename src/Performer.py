@@ -45,3 +45,8 @@ class Performer:
 
     def toDict(self):
         return { "instrument": self.instrument, "id": self.id }
+
+    def fromDict(dict):
+        instrument = dict["instrument"]
+        id = dict["id"]
+        return Performer(instrument, id)

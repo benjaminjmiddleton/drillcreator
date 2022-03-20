@@ -1,3 +1,4 @@
+from Drillset import Drillset
 from Performer import Performer, INSTRUMENTS
 
 class Show:
@@ -29,3 +30,7 @@ class Show:
             "performers": [ p.toDict() for p in self.performers ],
             "drillsets": [ d.toDict() for d in self.drillsets ]
         }
+
+    def fromDict(dict):
+        performers = [ Performer.fromDict(p) for p in dict["performers"] ]
+        drillsets = [ Drillset.fromDict(d) for d in dict["drillsets"] ]

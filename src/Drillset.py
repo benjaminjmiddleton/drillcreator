@@ -1,3 +1,6 @@
+from Coordinate import Coordinate
+
+
 class Drillset:
     def __init__(self, performers_coords, page, counts, notes=""):
         """
@@ -22,3 +25,10 @@ class Drillset:
             "counts": self.counts,
             "notes": self.notes
         }
+
+    def fromDict(dict):
+        performers_coords = { key: Coordinate.fromDict(value) for (key, value) in dict["performers_coords"].items() }
+        page = dict["page"]
+        counts = dict["counts"]
+        notes = dict["notes"]
+        return Drillset(performers_coords, page, counts, notes)

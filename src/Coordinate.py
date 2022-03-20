@@ -94,3 +94,10 @@ class Coordinate:
             "v_steps": self.v_steps,
             "hashmark": int(self.hashmark)
         }
+
+    def fromDict(dict):
+        h_steps = dict["h_steps"]
+        yardline = yardline(dict["yardline"])
+        v_steps = dict["v_steps"]
+        hashmark = hashmark(dict["hashmark"])
+        return Coordinate(h_steps, yardline, v_steps, hashmark)
