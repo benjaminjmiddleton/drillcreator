@@ -1,4 +1,5 @@
 from os.path import expanduser
+import json
 
 # matplotlib
 import matplotlib
@@ -112,7 +113,7 @@ class MainWindow(QMainWindow):
 
         self.last_dir = settings.value("MainWindow/last_dir", defaultValue=expanduser("~"))
 
-        self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue="../data/band1.pf")
+        self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue=Show([]))
     
     def save_settings(self):
         settings = QSettings("University of Cincinnati", "drillcreator")
@@ -149,6 +150,12 @@ class MainWindow(QMainWindow):
         print('save')
     
     def save_as(self):
+        file_tuple = QFileDialog.getSaveFileName(self, "Save Show As", self.last_dir, "JSON File (*.json)")
+        if file_tuple[0] != '':
+            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            fp = open(file_tuple[0], 'w')
+            json.dump(self.loaded_show.toDict(), fp, indent="\t")
+            fp.close()
         print('save')
 
     def previous_set(self):

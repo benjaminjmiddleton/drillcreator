@@ -13,3 +13,12 @@ class Drillset:
     
     def get_coord(self, label):
         return self.performers_coords[label]
+
+    def toDict(self):
+        coords = { key: value.toDict() for (key, value) in self.performers_coords.items() }
+        return {
+            "performers_coords": coords,
+            "page": self.page,
+            "counts": self.counts,
+            "notes": self.notes
+        }

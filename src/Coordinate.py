@@ -86,3 +86,11 @@ class Coordinate:
 
     def get_pixel_coords(self, field_size):
         return (self.get_x(field_size[0]), self.get_y(field_size[1]))
+
+    def toDict(self):
+        return {
+            "h_steps": self.h_steps,
+            "yardline": int(self.yardline),
+            "v_steps": self.v_steps,
+            "hashmark": int(self.hashmark)
+        }

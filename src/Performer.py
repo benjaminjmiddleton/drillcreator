@@ -1,4 +1,5 @@
 from enum import Enum
+import json
 
 # dictionary: group: [instrument_name, radius]
 INSTRUMENTS = {
@@ -41,3 +42,6 @@ class Performer:
     
     def instrument_name(self):
         return INSTRUMENTS[self.instrument][0]
+
+    def toDict(self):
+        return { "instrument": self.instrument, "id": self.id }

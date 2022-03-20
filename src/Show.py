@@ -23,3 +23,9 @@ class Show:
         self.drillsets.insert(drillset, index)
         for i in range(index+1, len(self.drillsets)):
             self.drillsets[i].page += 1
+
+    def toDict(self):
+        return {
+            "performers": [ p.toDict() for p in self.performers ],
+            "drillsets": [ d.toDict() for d in self.drillsets ]
+        }
