@@ -7,7 +7,7 @@
 - Benjamin Middleton (middlebo@mail.uc.edu)
 - Advisor: Mehdi Norouzi (norouzmi@mail.uc.edu)
 ## Project Abstract
-The visual portion of marching band is often referred to as "drill." Industry-standard tools such Pyware are used to
+The visual portion of marching band is often referred to as "drill." Industry-standard tools such as Pyware are used to
 design and create drill. These softwares provide a variety of tools, but the software could stand to be smarter.
 We want to create a set of drill creation tools that automated creation using image recognition and provide intelligent
 feedback.
