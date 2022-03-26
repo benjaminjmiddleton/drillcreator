@@ -7,8 +7,8 @@ import image_interpreter as ii
 import drill_solver as ds
 
 # image interpreter 
-output1 = ii.interpret_image("test_images/basic-circle-outline-small-issue.jpg", 30)
-output2 = ii.interpret_image("test_images/basic-circle-outline-issue.jpg", 30)
+output1 = ii.interpret_image("test_images/bearcat.png", 200)
+output2 = ii.interpret_image("test_images/basketball.jpg", 200)
 
 # drill solver 
 print("CALCULATING ROUGH TRANSITION")

@@ -1,4 +1,5 @@
 import glob
+import math
 
 import cv2
 import numpy as np
@@ -17,7 +18,7 @@ def auto_canny(image, sigma=0.33):
 	# return the edged image
 	return edged
 
-def interpret_image(filepath, num_points):
+def interpret_image(filepath, num_points, centered=True):
 	imagePath = glob.glob(f"./{filepath}")[0]
 	# Init
 	total = 0
@@ -27,6 +28,7 @@ def interpret_image(filepath, num_points):
 
 	# load the image, convert it to grayscale, and blur it slightly
 	image = cv2.imread(imagePath)
+	dimension = image.shape
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(gray, (3, 3), 0)
 
@@ -57,6 +59,9 @@ def interpret_image(filepath, num_points):
 			points = [line.interpolate(distance) for distance in distances]
 			new_line = LineString(points)
 			x, y = new_line.xy
+			if centered:
+				x=np.subtract(x, (math.ceil(dimension[1]/2)))
+				y=np.subtract(y, (math.ceil(dimension[0]/2)))
 			points_pos += list(zip(x, y))
 		run += 1
 	return points_pos
