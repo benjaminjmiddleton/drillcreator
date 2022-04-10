@@ -10,12 +10,13 @@ from matplotlib.figure import Figure
 
 # pyqt5
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget, QSizePolicy
+from PyQt5.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget, QSizePolicy, QDialog
 from PyQt5.QtCore import QSettings, QFileInfo, QPoint
 
 # drillcreator
 from Coordinate import Coordinate, hashmark, yardline
 from Show import Show
+from NewBandDialog import NewBandDialog
 
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -83,12 +84,13 @@ class MainWindow(QMainWindow):
         # sc.axes.plot(500, 300, 'yx')
         
         self.menuNew.actions()[0].triggered.connect(self.new_band)
-        self.menuNew.actions()[0].triggered.connect(self.new_show)
+        self.menuNew.actions()[1].triggered.connect(self.new_show)
 
         self.menuAdd_Drillset.actions()[0].triggered.connect(self.add_set_from_image)
         self.menuAdd_Drillset.actions()[1].triggered.connect(self.add_empty_set)
         self.menuAdd_Drillset.actions()[2].triggered.connect(self.add_copy_of_current_set)
 
+        self.actionOpen.triggered.connect(self.open)
         self.actionSave.triggered.connect(self.save)
         self.actionSave_As.triggered.connect(self.save_as)
 
@@ -119,8 +121,8 @@ class MainWindow(QMainWindow):
         settings = QSettings("University of Cincinnati", "drillcreator")
 
         settings.beginGroup("MainWindow")
-        settings.setValue("pos", self.frameGeometry().topLeft())
-        settings.setValue("size", (self.frameGeometry().width(), self.frameGeometry().height()))
+        settings.setValue("pos", self.geometry().topLeft())
+        settings.setValue("size", (self.geometry().width(), self.geometry().height()))
         settings.setValue("last_dir", self.last_dir)
         settings.setValue("loaded_show", self.loaded_show)
         settings.endGroup()
@@ -132,7 +134,9 @@ class MainWindow(QMainWindow):
             self.loaded_show = Show(Show.load_performers(file_tuple[0]))
 
     def new_band(self):
-        pass
+        dialog = NewBandDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
+            self.loaded_show = Show(dialog.performers)
 
     def open(self):
         file_tuple = QFileDialog.getOpenFileName(self, "Load Show", self.last_dir, "JSON File (*.json)")

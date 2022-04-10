@@ -37,7 +37,7 @@
     </widget>
     <widget class="QMenu" name="menuNew">
      <property name="title">
-      <string>New</string>
+      <string>New Show...</string>
      </property>
      <addaction name="actionBand"/>
      <addaction name="actionShow"/>
@@ -109,12 +109,12 @@
   </action>
   <action name="actionBand">
    <property name="text">
-    <string>Band</string>
+    <string>Use New Band</string>
    </property>
   </action>
   <action name="actionShow">
    <property name="text">
-    <string>Show</string>
+    <string>Use Existing Band</string>
    </property>
   </action>
   <action name="actionPerformer">
