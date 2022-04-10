@@ -128,10 +128,14 @@ class MainWindow(QMainWindow):
         settings.endGroup()
 
     def new_show(self):
-        file_tuple = QFileDialog.getOpenFileName(self, "Open Performer File", self.last_dir, "Performer Files (*.pf)")
+        # open an existing show file and use its performers
+        file_tuple = QFileDialog.getOpenFileName(self, "Use Band From Existing Show", self.last_dir, "JSON Files (*.json)")
         if file_tuple[0] != '':
             self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
-            self.loaded_show = Show(Show.load_performers(file_tuple[0]))
+            fp = open(file_tuple[0], 'r')
+            dict = json.load(fp)
+            fp.close()
+            self.loaded_show = Show.fromDict(dict, True)
 
     def new_band(self):
         dialog = NewBandDialog(self)

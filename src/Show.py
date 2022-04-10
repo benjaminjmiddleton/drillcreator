@@ -10,16 +10,6 @@ class Show:
         self.performers = performers
         self.drillsets = drillsets
     
-    @staticmethod
-    def load_performers(pf_file):
-        performers = []
-        pf_file = open(pf_file)
-        for line in pf_file.readlines():
-            line = line.split(' ')
-            for i in range(0, int(line[1])):
-                performers.append(Performer(line[0], i+1))
-        return performers
-    
     def insert_drillset(self, drillset, index):
         self.drillsets.insert(drillset, index)
         for i in range(index+1, len(self.drillsets)):
@@ -31,6 +21,10 @@ class Show:
             "drillsets": [ d.toDict() for d in self.drillsets ]
         }
 
-    def fromDict(dict):
+    def fromDict(dict, performers_only=False):
         performers = [ Performer.fromDict(p) for p in dict["performers"] ]
-        drillsets = [ Drillset.fromDict(d) for d in dict["drillsets"] ]
+        if not performers_only:
+            drillsets = [ Drillset.fromDict(d) for d in dict["drillsets"] ]
+            return Show(performers, drillsets)
+        else:
+            return Show(performers)
