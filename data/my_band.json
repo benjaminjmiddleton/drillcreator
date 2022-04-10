@@ -1,0 +1,41 @@
+{
+	"performers": [
+		{
+			"instrument": "P",
+			"id": 1
+		},
+		{
+			"instrument": "P",
+			"id": 2
+		},
+		{
+			"instrument": "F",
+			"id": 1
+		},
+		{
+			"instrument": "F",
+			"id": 2
+		},
+		{
+			"instrument": "F",
+			"id": 3
+		},
+		{
+			"instrument": "C",
+			"id": 1
+		},
+		{
+			"instrument": "C",
+			"id": 2
+		},
+		{
+			"instrument": "C",
+			"id": 3
+		},
+		{
+			"instrument": "C",
+			"id": 4
+		}
+	],
+	"drillsets": []
+}

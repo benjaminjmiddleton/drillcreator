@@ -11,7 +11,7 @@ from matplotlib.figure import Figure
 # pyqt5
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QVBoxLayout, QWidget, QSizePolicy, QDialog
-from PyQt5.QtCore import QSettings, QFileInfo, QPoint
+from PyQt5.QtCore import QSettings, QFileInfo, QPoint, pyqtSignal
 
 # drillcreator
 from Coordinate import Coordinate, hashmark, yardline
@@ -27,6 +27,7 @@ class MplCanvas(FigureCanvasQTAgg):
 
 class MainWindow(QMainWindow):
     FIELD_SIZE = (886, 389) # dimensions of ui/field.png
+    active_set_changed = pyqtSignal()
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -83,6 +84,8 @@ class MainWindow(QMainWindow):
         # sc.axes.plot(300, 300, 'bx')
         # sc.axes.plot(500, 300, 'yx')
         
+        self.active_set_changed.connect(self.draw_active_set)
+
         self.menuNew.actions()[0].triggered.connect(self.new_band)
         self.menuNew.actions()[1].triggered.connect(self.new_show)
 
@@ -116,6 +119,8 @@ class MainWindow(QMainWindow):
         self.last_dir = settings.value("MainWindow/last_dir", defaultValue=expanduser("~"))
 
         self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue=Show([]))
+
+        self.active_set_changed.emit()
     
     def save_settings(self):
         settings = QSettings("University of Cincinnati", "drillcreator")
@@ -127,6 +132,11 @@ class MainWindow(QMainWindow):
         settings.setValue("loaded_show", self.loaded_show)
         settings.endGroup()
 
+    def draw_active_set(self):
+        # clean the canvas
+        # plot the points for self.active_set
+        print("draw_active_set")
+
     def new_show(self):
         # open an existing show file and use its performers
         file_tuple = QFileDialog.getOpenFileName(self, "Use Band From Existing Show", self.last_dir, "JSON Files (*.json)")
@@ -136,11 +146,13 @@ class MainWindow(QMainWindow):
             dict = json.load(fp)
             fp.close()
             self.loaded_show = Show.fromDict(dict, True)
+            self.active_set_changed.emit()
 
     def new_band(self):
         dialog = NewBandDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             self.loaded_show = Show(dialog.performers)
+            self.active_set_changed.emit()
 
     def open(self):
         file_tuple = QFileDialog.getOpenFileName(self, "Load Show", self.last_dir, "JSON File (*.json)")
@@ -149,16 +161,20 @@ class MainWindow(QMainWindow):
             fp = open(file_tuple[0], 'r')
             dict = json.load(fp)
             fp.close()
-            self.loaded_show = Show.fromDict(dict)
-    
+            self.loaded_show = Show.fromDict(dict)    
+            self.active_set_changed.emit()
+
     def add_set_from_image(self):
         print('from image')
+        self.active_set_changed.emit()
 
     def add_empty_set(self):
         print('empty')
+        self.active_set_changed.emit()
 
     def add_copy_of_current_set(self):
         print('copy')
+        self.active_set_changed.emit()
     
     def save(self):
         print('save')
@@ -173,18 +189,17 @@ class MainWindow(QMainWindow):
 
     def previous_set(self):
         print("previous")
+        self.active_set_changed.emit()
     
     def next_set(self):
         print("next")
+        self.active_set_changed.emit()
     
     def toggle_navigation_mode(self):
         print("mode")
     
     def show_active_set_information(self):
         print("info")
-
-# TODO this file
-# serialize and deserialize self.loaded_show and .pf files (save(), save_as(), open()) - this will also mean rewriting Show.load_performers().
 
 # TODO major features
 # implement existing buttons and menu bar items

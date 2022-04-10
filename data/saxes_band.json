@@ -1,0 +1,53 @@
+{
+	"performers": [
+		{
+			"instrument": "A",
+			"id": 1
+		},
+		{
+			"instrument": "A",
+			"id": 2
+		},
+		{
+			"instrument": "A",
+			"id": 3
+		},
+		{
+			"instrument": "E",
+			"id": 1
+		},
+		{
+			"instrument": "E",
+			"id": 2
+		},
+		{
+			"instrument": "E",
+			"id": 3
+		},
+		{
+			"instrument": "E",
+			"id": 4
+		},
+		{
+			"instrument": "X",
+			"id": 1
+		},
+		{
+			"instrument": "X",
+			"id": 2
+		},
+		{
+			"instrument": "X",
+			"id": 3
+		},
+		{
+			"instrument": "X",
+			"id": 4
+		},
+		{
+			"instrument": "X",
+			"id": 5
+		}
+	],
+	"drillsets": []
+}
