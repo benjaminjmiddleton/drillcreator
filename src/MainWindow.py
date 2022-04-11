@@ -1,6 +1,7 @@
 from argparse import _StoreFalseAction
 from os.path import expanduser
 import json
+import cv2
 
 # matplotlib
 import matplotlib
@@ -223,7 +224,11 @@ class MainWindow(QMainWindow):
         if file_tuple[0] != '':
             self.last_image_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             points = interpret_image(file_tuple[0], len(self.loaded_show.performers))
+            print(len(self.loaded_show.performers))
+            print(len(points))
             points = self.fit_to_field(points)
+            shape = cv2.imread(file_tuple[0]).shape
+            points = self.set_aspect_ratio(points, shape[0]/shape[1])
             coords = []
             for point in points:
                 coord = Coordinate.from_centered_pixel_coords(point[0], point[1], self.FIELD_SIZE)
@@ -240,8 +245,8 @@ class MainWindow(QMainWindow):
                 self.active_set = len(self.loaded_show.drillsets)-1
             self.active_set_changed.emit()
 
-    # given a set of points centered at (0,0), make sure they fit inside the field
-    def fit_to_field(self, points):
+    # given a set of points, return a tuple (min_x, max_x, min_y, max_y)
+    def find_extremes(self, points):
         min_x, max_x, min_y, max_y = None, None, None, None
         for point in points:
             if min_x == None or point[0] < min_x:
@@ -252,6 +257,11 @@ class MainWindow(QMainWindow):
                 min_y = point[1]
             if max_y == None or point[1] > max_y:
                 max_y = point[1]
+        return min_x, max_x, min_y, max_y
+
+    # given a set of points centered at (0,0), make sure they fit inside the field
+    def fit_to_field(self, points):
+        min_x, max_x, min_y, max_y = self.find_extremes(points)
         if min_x < -self.FIELD_SIZE[0]/2:
             factor = abs(min_x/(self.FIELD_SIZE[0]/2))
             points = [(point[0]/factor, point[1]) for point in points]
@@ -263,6 +273,21 @@ class MainWindow(QMainWindow):
             points = [(point[0], point[1]/factor) for point in points]
         if max_y > self.FIELD_SIZE[1]/2:
             factor = abs(max_y/(self.FIELD_SIZE[1]/2))
+            points = [(point[0], point[1]/factor) for point in points]
+        return points
+    
+    def set_aspect_ratio(self, points, target_ratio):
+        """
+        @param target_ratio: original pixel ratio of the image interpreted into the points, x/y.
+        """
+        min_x, max_x, min_y, max_y = self.find_extremes(points)
+        width = max_x - min_x
+        height = max_y - min_y
+        ratio = width/height
+        factor = target_ratio / ratio
+        if factor < 1: # if the points are too wide
+            points = [(point[0]*factor, point[1]) for point in points]
+        elif factor > 1: # if the points are too tall
             points = [(point[0], point[1]/factor) for point in points]
         return points
 

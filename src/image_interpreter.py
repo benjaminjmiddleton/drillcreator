@@ -80,7 +80,7 @@ def vis_points(filepath, x, y):
 	cv2.waitKey(0)
 
 if __name__ == "__main__":
-	points = interpret_image("test_images/bearcat.png", 260, relative_path=True)
+	points = interpret_image("test_images/square.png", 260, relative_path=True)
 	x, y = map(list,zip(*points))
 	vis_points("test_images/bearcat.png", x, y)
 		
