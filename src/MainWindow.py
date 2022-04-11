@@ -2,6 +2,7 @@ from argparse import _StoreFalseAction
 from os.path import expanduser
 import json
 import cv2
+import numpy as np
 
 # matplotlib
 import matplotlib
@@ -9,6 +10,7 @@ matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+import matplotlib.cm as cm
 
 # pyqt5
 from PyQt5 import uic
@@ -181,9 +183,12 @@ class MainWindow(QMainWindow):
             sc = self.centralWidget().findChildren(MplCanvas)[0]
 
             drillset = self.loaded_show.drillsets[self.active_set]
+            colormap = cm.rainbow(np.linspace(0, 1, len(drillset.performers_coords)))
+            i = 0
             for pid in drillset.performers_coords:
                 coord = drillset.performers_coords[pid]
-                sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bx')
+                sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), color=colormap[i], marker='x')
+                i += 1
             sc.draw()
 
     def new_show(self):
