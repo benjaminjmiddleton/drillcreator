@@ -16,7 +16,9 @@ from PyQt5.QtCore import QSettings, QFileInfo, QPoint, pyqtSignal
 # drillcreator
 from Coordinate import Coordinate, hashmark, yardline
 from Show import Show
+from Drillset import Drillset
 from NewBandDialog import NewBandDialog
+from image_interpreter import interpret_image
 
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -67,7 +69,7 @@ class MainWindow(QMainWindow):
         # coord = Coordinate(4, yardline.A45, 0, hashmark.FSL)
         # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'rx')
 
-        # coord = Coordinate(-16, yardline.A_END, 0, hashmark.FH)
+        # coord = Coordinate(-16, yardline.A_END, 4, hashmark.FH)
         # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'rx')
 
         # coord = Coordinate(-16, yardline.B_END, 0, hashmark.FH)
@@ -79,10 +81,33 @@ class MainWindow(QMainWindow):
         # coord = Coordinate(0, yardline.B_END, 0, hashmark.FH)
         # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'rx')
 
+        # field_center = (self.FIELD_SIZE[0]/2, self.FIELD_SIZE[1]/2)
+
         # sc.axes.plot(300, 100, 'rx')
+        # coord = Coordinate.from_centered_pixel_coords(300-field_center[0], 100-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+        
         # sc.axes.plot(500, 100, 'gx')
+        # coord = Coordinate.from_centered_pixel_coords(500-field_center[0], 100-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+
         # sc.axes.plot(300, 300, 'bx')
+        # coord = Coordinate.from_centered_pixel_coords(300-field_center[0], 300-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+
         # sc.axes.plot(500, 300, 'yx')
+        # coord = Coordinate.from_centered_pixel_coords(500-field_center[0], 300-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+
+        # sc.axes.plot(400, 200, 'rx')
+        # coord = Coordinate.from_centered_pixel_coords(400-field_center[0], 200-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+
+        # sc.axes.plot(450, 180, 'gx')
+        # coord = Coordinate.from_centered_pixel_coords(450-field_center[0], 180-field_center[1], self.FIELD_SIZE)
+        # sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bo')
+        
+        # END PLOT TEST POINTS
         
         self.active_set_changed.connect(self.draw_active_set)
 
@@ -116,9 +141,11 @@ class MainWindow(QMainWindow):
         size = settings.value("MainWindow/size", defaultValue=self.FIELD_SIZE)
         self.setGeometry(pos.x(), pos.y(), size[0], size[1])
 
-        self.last_dir = settings.value("MainWindow/last_dir", defaultValue=expanduser("~"))
+        self.last_show_dir = settings.value("MainWindow/last_show_dir", defaultValue=expanduser("~"))
+        self.last_image_dir = settings.value("MainWindow/last_image_dir", defaultValue=expanduser("~"))
 
         self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue=Show([]))
+        self.active_set = settings.value("MainWindow/active_set", defaultValue=0)
 
         self.active_set_changed.emit()
     
@@ -128,20 +155,24 @@ class MainWindow(QMainWindow):
         settings.beginGroup("MainWindow")
         settings.setValue("pos", self.geometry().topLeft())
         settings.setValue("size", (self.geometry().width(), self.geometry().height()))
-        settings.setValue("last_dir", self.last_dir)
+        settings.setValue("last_show_dir", self.last_show_dir)
+        settings.setValue("last_image_dir", self.last_image_dir)
         settings.setValue("loaded_show", self.loaded_show)
+        settings.setValue("active_set", self.active_set)
         settings.endGroup()
 
     def draw_active_set(self):
         # clean the canvas
-        # plot the points for self.active_set
+        if self.active_set:
+            # plot the points for self.active_set
+            pass
         print("draw_active_set")
 
     def new_show(self):
         # open an existing show file and use its performers
-        file_tuple = QFileDialog.getOpenFileName(self, "Use Band From Existing Show", self.last_dir, "JSON Files (*.json)")
+        file_tuple = QFileDialog.getOpenFileName(self, "Use Band From Existing Show", self.last_show_dir, "JSON Files (*.json)")
         if file_tuple[0] != '':
-            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            self.last_show_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             fp = open(file_tuple[0], 'r')
             dict = json.load(fp)
             fp.close()
@@ -155,9 +186,9 @@ class MainWindow(QMainWindow):
             self.active_set_changed.emit()
 
     def open(self):
-        file_tuple = QFileDialog.getOpenFileName(self, "Load Show", self.last_dir, "JSON File (*.json)")
+        file_tuple = QFileDialog.getOpenFileName(self, "Load Show", self.last_show_dir, "JSON File (*.json)")
         if file_tuple[0] != '':
-            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            self.last_show_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             fp = open(file_tuple[0], 'r')
             dict = json.load(fp)
             fp.close()
@@ -165,8 +196,20 @@ class MainWindow(QMainWindow):
             self.active_set_changed.emit()
 
     def add_set_from_image(self):
-        print('from image')
-        self.active_set_changed.emit()
+        file_tuple = QFileDialog.getOpenFileName(self, "Add Set From Image", self.last_image_dir, "Image File (*.png *.jpeg *.jpg)")
+        if file_tuple[0] != '':
+            self.last_image_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            points = interpret_image(file_tuple[0], len(self.loaded_show.performers))
+            coords = []
+            for point in points:
+                coord = Coordinate.from_centered_pixel_coords(point[0], point[1], self.FIELD_SIZE)
+                coords.append(coord)
+            performers_coords = {}
+            for i in range(len(self.loaded_show.performers)):
+                performers_coords[self.loaded_show.performers[i]] = coords[i]
+            drillset = Drillset(performers_coords, len(self.loaded_show.drillsets)+1, 32) # TODO ALLOW INPUT OF COUNTS
+            self.loaded_show.drillsets.append(drillset)
+            self.active_set_changed.emit()
 
     def add_empty_set(self):
         print('empty')
@@ -180,9 +223,9 @@ class MainWindow(QMainWindow):
         print('save')
     
     def save_as(self):
-        file_tuple = QFileDialog.getSaveFileName(self, "Save Show As", self.last_dir, "JSON File (*.json)")
+        file_tuple = QFileDialog.getSaveFileName(self, "Save Show As", self.last_show_dir, "JSON File (*.json)")
         if file_tuple[0] != '':
-            self.last_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
+            self.last_show_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             fp = open(file_tuple[0], 'w')
             json.dump(self.loaded_show.toDict(), fp, indent="\t")
             fp.close()

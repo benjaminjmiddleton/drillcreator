@@ -46,7 +46,7 @@ class Coordinate:
                         A positive value corresponds to inside steps. A negative value corresponds to outside steps.
         @param yardline: which yardline the marcher is closest to, Enum
         @param v_steps: 8:5 steps off the hashmark, Integer
-                        A positive value corresponds to steps towards FSL. A negative value corresponds ot steps towards BSL.
+                        A positive value corresponds to steps towards FSL. A negative value corresponds to steps towards BSL.
         @param hashmark: the hashmark or sideline the marcher is closest to
         """
         self.h_steps = h_steps
@@ -62,7 +62,7 @@ class Coordinate:
         five_yards = field_width / Coordinate.TOTAL_H_YARDS * 5
         _8to5 = five_yards / 8
         coord = (self.yardline) * five_yards
-        if self.yardline <= 11: # if on side A
+        if self.yardline <= 12: # if on side A
             coord += _8to5 * self.h_steps
         else: # if on side B
             coord -= _8to5 * self.h_steps
@@ -86,6 +86,39 @@ class Coordinate:
 
     def get_pixel_coords(self, field_size):
         return (self.get_x(field_size[0]), self.get_y(field_size[1]))
+    
+    def from_centered_pixel_coords(x, y, field_size):
+        # x calculations
+        five_yards = field_size[0] / Coordinate.TOTAL_H_YARDS * 5
+        x_8to5 = five_yards / 8
+
+        x_steps_from_50 = x / x_8to5
+        yardline = round(12 + x_steps_from_50 / 8)
+        h_steps = x_steps_from_50 - (yardline-12)*8
+        if yardline > 12:
+            h_steps *= -1 # convert from "left to right" h_steps to "inside/outside" h_steps
+        
+        # y calculations
+        y_8to5 = field_size[1] / Coordinate.STEPS_FROM_BSL_TO_FSL
+        v_steps = y / y_8to5
+        # STEPS_FROM_BSL_TO_BH = 28
+        # STEPS_FROM_BSL_TO_FH = 48
+        # STEPS_FROM_BSL_TO_FSL = 76
+        # steps from bsl to midfield = 38
+        if v_steps < -24:
+            _hashmark = hashmark.BSL
+            v_steps += 38 # steps from BSL to middle
+        elif v_steps < 0:
+            _hashmark = hashmark.BH
+            v_steps += 10 # steps from BH to middle
+        elif v_steps < 24:
+            _hashmark = hashmark.FH
+            v_steps -= 10 # steps from FH to middle
+        else:
+            _hashmark = hashmark.FSL
+            v_steps -= 38 # steps from FSL to middle
+
+        return Coordinate(h_steps, yardline, v_steps, _hashmark)
 
     def toDict(self):
         return {

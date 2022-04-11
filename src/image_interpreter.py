@@ -18,8 +18,11 @@ def auto_canny(image, sigma=0.33):
 	# return the edged image
 	return edged
 
-def interpret_image(filepath, num_points, centered=True):
-	imagePath = glob.glob(f"./{filepath}")[0]
+def interpret_image(filepath, num_points, centered=True, relative_path=False):
+	if relative_path:
+		imagePath = glob.glob(f"./{filepath}")[0]
+	else:
+		imagePath = glob.glob(filepath)[0]
 	# Init
 	total = 0
 	ntotal = 0
@@ -77,7 +80,7 @@ def vis_points(filepath, x, y):
 	cv2.waitKey(0)
 
 if __name__ == "__main__":
-	points = interpret_image("test_images/bearcat.png", 260)
+	points = interpret_image("test_images/bearcat.png", 260, relative_path=True)
 	x, y = map(list,zip(*points))
 	vis_points("test_images/bearcat.png", x, y)
 		
