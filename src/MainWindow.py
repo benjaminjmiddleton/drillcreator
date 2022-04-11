@@ -1,3 +1,4 @@
+from argparse import _StoreFalseAction
 from os.path import expanduser
 import json
 
@@ -26,6 +27,12 @@ class MplCanvas(FigureCanvasQTAgg):
         self.axes = fig.add_subplot(111)
         self.axes.set_axis_off()
         super(MplCanvas, self).__init__(fig)
+    
+    def clear_points(self):
+        self.axes.cla()
+        self.axes.set_axis_off()
+        img = plt.imread('ui/field.png')
+        self.axes.imshow(img)
 
 class MainWindow(QMainWindow):
     FIELD_SIZE = (886, 389) # dimensions of ui/field.png
@@ -145,7 +152,7 @@ class MainWindow(QMainWindow):
         self.last_image_dir = settings.value("MainWindow/last_image_dir", defaultValue=expanduser("~"))
 
         self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue=Show([]))
-        self.active_set = settings.value("MainWindow/active_set", defaultValue=0)
+        self.active_set = settings.value("MainWindow/active_set", defaultValue=None)
 
         self.active_set_changed.emit()
     
@@ -161,12 +168,22 @@ class MainWindow(QMainWindow):
         settings.setValue("active_set", self.active_set)
         settings.endGroup()
 
+    def clear_points(self):
+        sc = self.centralWidget().findChildren(MplCanvas)[0]
+        sc.clear_points()
+        sc.draw()
+        
     def draw_active_set(self):
-        # clean the canvas
-        if self.active_set:
-            # plot the points for self.active_set
-            pass
         print("draw_active_set")
+        self.clear_points()
+        if self.active_set != None:
+            sc = self.centralWidget().findChildren(MplCanvas)[0]
+
+            drillset = self.loaded_show.drillsets[self.active_set]
+            for pid in drillset.performers_coords:
+                coord = drillset.performers_coords[pid]
+                sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), 'bx')
+            sc.draw()
 
     def new_show(self):
         # open an existing show file and use its performers
@@ -177,12 +194,14 @@ class MainWindow(QMainWindow):
             dict = json.load(fp)
             fp.close()
             self.loaded_show = Show.fromDict(dict, True)
+            self.active_set = None
             self.active_set_changed.emit()
 
     def new_band(self):
         dialog = NewBandDialog(self)
         if dialog.exec_() == QDialog.Accepted:
             self.loaded_show = Show(dialog.performers)
+            self.active_set = None
             self.active_set_changed.emit()
 
     def open(self):
@@ -192,7 +211,11 @@ class MainWindow(QMainWindow):
             fp = open(file_tuple[0], 'r')
             dict = json.load(fp)
             fp.close()
-            self.loaded_show = Show.fromDict(dict)    
+            self.loaded_show = Show.fromDict(dict)
+            if len(self.loaded_show.drillsets) != 0:
+                self.active_set = 0
+            else:
+                self.active_set = None
             self.active_set_changed.emit()
 
     def add_set_from_image(self):
@@ -200,16 +223,48 @@ class MainWindow(QMainWindow):
         if file_tuple[0] != '':
             self.last_image_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             points = interpret_image(file_tuple[0], len(self.loaded_show.performers))
+            points = self.fit_to_field(points)
             coords = []
             for point in points:
                 coord = Coordinate.from_centered_pixel_coords(point[0], point[1], self.FIELD_SIZE)
                 coords.append(coord)
             performers_coords = {}
             for i in range(len(self.loaded_show.performers)):
-                performers_coords[self.loaded_show.performers[i]] = coords[i]
+                performers_coords[self.loaded_show.performers[i].performer_label()] = coords[i]
             drillset = Drillset(performers_coords, len(self.loaded_show.drillsets)+1, 32) # TODO ALLOW INPUT OF COUNTS
-            self.loaded_show.drillsets.append(drillset)
+            if self.active_set != None:
+                self.loaded_show.drillsets.insert(self.active_set+1, drillset)
+                self.active_set += 1
+            else:
+                self.loaded_show.drillsets.append(drillset)
+                self.active_set = len(self.loaded_show.drillsets)-1
             self.active_set_changed.emit()
+
+    # given a set of points centered at (0,0), make sure they fit inside the field
+    def fit_to_field(self, points):
+        min_x, max_x, min_y, max_y = None, None, None, None
+        for point in points:
+            if min_x == None or point[0] < min_x:
+                min_x = point[0]
+            if max_x == None or point[0] > max_x:
+                max_x = point[0]
+            if min_y == None or point[1] < min_y:
+                min_y = point[1]
+            if max_y == None or point[1] > max_y:
+                max_y = point[1]
+        if min_x < -self.FIELD_SIZE[0]/2:
+            factor = abs(min_x/(self.FIELD_SIZE[0]/2))
+            points = [(point[0]/factor, point[1]) for point in points]
+        if max_x > self.FIELD_SIZE[0]/2:
+            factor = abs(max_x/(self.FIELD_SIZE[0]/2))
+            points = [(point[0]/factor, point[1]) for point in points]
+        if min_y < -self.FIELD_SIZE[1]/2:
+            factor = abs(min_y/(self.FIELD_SIZE[1]/2))
+            points = [(point[0], point[1]/factor) for point in points]
+        if max_y > self.FIELD_SIZE[1]/2:
+            factor = abs(max_y/(self.FIELD_SIZE[1]/2))
+            points = [(point[0], point[1]/factor) for point in points]
+        return points
 
     def add_empty_set(self):
         print('empty')
@@ -231,12 +286,15 @@ class MainWindow(QMainWindow):
             fp.close()
 
     def previous_set(self):
-        print("previous")
-        self.active_set_changed.emit()
+        if self.active_set != None and self.active_set > 0:
+            self.active_set -= 1
+            self.active_set_changed.emit()
     
     def next_set(self):
-        print("next")
-        self.active_set_changed.emit()
+        print(self.active_set)
+        if self.active_set != None and self.active_set < len(self.loaded_show.drillsets)-1:
+            self.active_set += 1
+            self.active_set_changed.emit()
     
     def toggle_navigation_mode(self):
         print("mode")

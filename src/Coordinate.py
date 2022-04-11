@@ -130,7 +130,7 @@ class Coordinate:
 
     def fromDict(dict):
         h_steps = dict["h_steps"]
-        yardline = yardline(dict["yardline"])
+        _yardline = dict["yardline"]
         v_steps = dict["v_steps"]
-        hashmark = hashmark(dict["hashmark"])
-        return Coordinate(h_steps, yardline, v_steps, hashmark)
+        _hashmark = dict["hashmark"]
+        return Coordinate(h_steps, _yardline, v_steps, _hashmark)

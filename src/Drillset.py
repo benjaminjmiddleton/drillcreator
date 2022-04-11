@@ -4,7 +4,7 @@ from Coordinate import Coordinate
 class Drillset:
     def __init__(self, performers_coords, page, counts, notes=""):
         """
-        @param performers_coords: Dictionary - Performer: Coordinate
+        @param performers_coords: Dictionary - String (performer label): Coordinate
         @param page: page number, Integer
         @param counts: number of counts in the set, Integer
         @param notes: any notes about the set to display, String
