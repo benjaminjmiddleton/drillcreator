@@ -22,6 +22,7 @@ from Show import Show
 from Drillset import Drillset
 from NewBandDialog import NewBandDialog
 from image_interpreter import interpret_image
+from Performer import INSTRUMENTS_LIST
 
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=5, height=4, dpi=100):
@@ -135,6 +136,7 @@ class MainWindow(QMainWindow):
         navigation_box.rightArrowButton.clicked.connect(self.next_set)
         navigation_box.modeButton.clicked.connect(self.toggle_navigation_mode)
         navigation_box.informationButton.clicked.connect(self.show_active_set_information)
+        navigation_box.sectionColoringButton.clicked.connect(self.toggle_section_coloring)
 
         self.read_settings()
 
@@ -153,6 +155,8 @@ class MainWindow(QMainWindow):
         self.last_show_dir = settings.value("MainWindow/last_show_dir", defaultValue=expanduser("~"))
         self.last_image_dir = settings.value("MainWindow/last_image_dir", defaultValue=expanduser("~"))
 
+        self.section_coloring = settings.value("MainWindow/section_coloring", defaultValue=False)
+
         self.loaded_show = settings.value("MainWindow/loaded_show", defaultValue=Show([]))
         self.active_set = settings.value("MainWindow/active_set", defaultValue=None)
 
@@ -164,8 +168,12 @@ class MainWindow(QMainWindow):
         settings.beginGroup("MainWindow")
         settings.setValue("pos", self.geometry().topLeft())
         settings.setValue("size", (self.geometry().width(), self.geometry().height()))
+
         settings.setValue("last_show_dir", self.last_show_dir)
         settings.setValue("last_image_dir", self.last_image_dir)
+
+        settings.setValue("section_coloring", self.section_coloring)
+
         settings.setValue("loaded_show", self.loaded_show)
         settings.setValue("active_set", self.active_set)
         settings.endGroup()
@@ -176,18 +184,26 @@ class MainWindow(QMainWindow):
         sc.draw()
         
     def draw_active_set(self):
-        print("draw_active_set")
         self.clear_points()
         if self.active_set != None:
             sc = self.centralWidget().findChildren(MplCanvas)[0]
 
             drillset = self.loaded_show.drillsets[self.active_set]
-            colormap = cm.rainbow(np.linspace(0, 1, len(drillset.performers_coords)))
-            i = 0
+            if not self.section_coloring:
+                colormap = cm.rainbow(np.linspace(0, 1, len(drillset.performers_coords)))
+            else:
+                colormap = cm.tab20(np.linspace(0, 1, len(INSTRUMENTS_LIST)))
+            i = -1
             for pid in drillset.performers_coords:
                 coord = drillset.performers_coords[pid]
+                if not self.section_coloring:
+                    i += 1
+                else:
+                    if pid[1].isdigit(): # if the group label is one character long (could be more elegant with a RegEx)
+                        i = INSTRUMENTS_LIST.index(pid[0])
+                    else:
+                        i = INSTRUMENTS_LIST.index(pid[0:2])
                 sc.axes.plot(coord.get_x(self.FIELD_SIZE[0]), coord.get_y(self.FIELD_SIZE[1]), color=colormap[i], marker='x')
-                i += 1
             sc.draw()
 
     def new_show(self):
@@ -228,8 +244,6 @@ class MainWindow(QMainWindow):
         if file_tuple[0] != '':
             self.last_image_dir = QFileInfo(file_tuple[0]).dir().absolutePath()
             points = interpret_image(file_tuple[0], len(self.loaded_show.performers))
-            print(len(self.loaded_show.performers))
-            print(len(points))
             points = self.fit_to_field(points)
             shape = cv2.imread(file_tuple[0]).shape
             points = self.set_aspect_ratio(points, shape[0]/shape[1])
@@ -320,7 +334,6 @@ class MainWindow(QMainWindow):
             self.active_set_changed.emit()
     
     def next_set(self):
-        print(self.active_set)
         if self.active_set != None and self.active_set < len(self.loaded_show.drillsets)-1:
             self.active_set += 1
             self.active_set_changed.emit()
@@ -330,6 +343,10 @@ class MainWindow(QMainWindow):
     
     def show_active_set_information(self):
         print("info")
+
+    def toggle_section_coloring(self):
+        self.section_coloring = not self.section_coloring
+        self.active_set_changed.emit() # bad signal naming but we emit this signal to redraw.
 
 # TODO major features
 # implement existing buttons and menu bar items

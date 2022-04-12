@@ -26,6 +26,8 @@ INSTRUMENTS = {
     '-': ['Other', 1],
 }
 
+INSTRUMENTS_LIST = ['P','F','C','A','E','X','T','M','R','B','U','SD','TD','BD','CC','CG','-']
+
 class Performer:
     def __init__(self, instrument, id):
         self.instrument = instrument

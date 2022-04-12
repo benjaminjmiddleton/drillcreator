@@ -1,9 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog, QSpinBox
 
-from Performer import Performer
-
-INSTRUMENTS_LIST = ['P','F','C','A','E','X','T','M','R','B','U','SD','TD','BD','CC','CG','-']
+from Performer import Performer, INSTRUMENTS_LIST
 
 class NewBandDialog(QDialog):
 

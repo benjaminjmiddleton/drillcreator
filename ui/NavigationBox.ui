@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>381</width>
+    <width>534</width>
     <height>59</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>361</width>
+     <width>501</width>
      <height>41</height>
     </rect>
    </property>
@@ -75,6 +75,19 @@
     </property>
     <property name="text">
      <string>Page Information</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="sectionColoringButton">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Toggle Section Coloring</string>
     </property>
    </widget>
   </widget>
