@@ -51,7 +51,7 @@ We have had no expenses to date.
 - [Attention Is All You Need](https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf)
 - [The Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 ### [Pyware (Formatting Research)](https://www.pyware.com/)
-## Work Justification
+## Work Justification: Fall
 ### Mason Davy
 - Algorithm Prototyping: 8 hours
 - Clustering & Neural Network Research: 5 hours
@@ -87,3 +87,9 @@ We have had no expenses to date.
 - UI Design: 3 hours
 - Team Meetings: 7 hours
 - Project Organization: 2 hours
+
+## Work Justification: Spring
+### Mason Davy
+### Andy Greer
+### Matthew Kuhr
+### Benjamin Middleton
