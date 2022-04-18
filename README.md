@@ -16,25 +16,36 @@ feedback.
 [Description](description.md)
 ## User Stories
 [User Stories](User_Stories.md)
-## Design Diagrams
+## Design Diagrams and User Interface Specification
 [Legend](Design_Diagrams/Legend.md)\
 [Level 0](Design_Diagrams/Design_Diagrams-D0.png)\
 [Level 1](Design_Diagrams/Design_Diagrams-D1.png)\
 [Level 2](Design_Diagrams/Design_Diagrams-D2.png)\
 [Algorithm Flowchart](Design_Diagrams/Design_Diagrams-Solver_Algorithm.png)\
 [Algorithm Visualization](Design_Diagrams/visualization.md)
+## Test Plan and Results
+[Test Plan](homework_essays/Test_Plan.pdf)
+## User Manual
+[User Manual](UserGuide.md)
 ## Project Tasks and Timeline
 [Task List](TaskList.md)\
 [Timeline](homework_essays/milestone_timeline_effort.md)\
 [Effort Matrix](homework_essays/milestone_timeline_effort.md)
 ## PPT Slideshow
-[Slide Show](drillcreator_presentation_10-27.pptx)\
-[Presentation](https://www.youtube.com/watch?v=0QAcsUOLSP8)
-## Self-Assessment Essays
+[Slide Show](drillcreator_presentation_2-21.pptx)\
+[Presentation](https://www.youtube.com/watch?v=fx0L6kSl1SM)
+## Final Expo Poster
+[Poster](drillcreator_poster_andy_greer.pdf)
+## Initial Self-Assessment Essays
 [Mason Davy](homework_essays/Mason_Davy_Capstone_Assessment.pdf)\
 [Andy Greer](homework_essays/Andy_Greer_Individual_Capstone_Assessment.pdf)\
 [Matthew Kuhr](<homework_essays/Matthew Kuhr Assessment.pdf>)\
 [Benjamin Middleton](homework_essays/Middleton_Capstone_Assessment.pdf)
+## Final Self-Assessment Essays
+[Mason Davy](<homework_essays/Mason Davy Spring Reflection.pdf>)\
+[Andy Greer]()\
+[Matthew Kuhr](<homework_essays/Matthew Kuhr Final Assessment.pdf>)\
+[Benjamin Middleton](homework_essays/Middleton_Capstone_Assessment_Spring.pdf)
 ## Professional Biographies
 [Mason Davy](mason_davy_biography.md)\
 [Andy Greer](Andy_Greer_Personal_Biography.md)\
@@ -90,6 +101,35 @@ We have had no expenses to date.
 
 ## Work Justification: Spring
 ### Mason Davy
+- JSON Serialization: 10 hours
+- Team Meetings: 7 hours
+- Presentation: 3 hours
+- Assignment Effort: 5 hours
+- GUI Development & Testing 9 Hours
+- Meetings with Advisor: 2 Hours
+- Preparing for the Presentation: 2 Hours
+- Debugging: 2 Hours
 ### Andy Greer
+- Combine Image Interpreter with Drill Solver: 8 hours
+- Optimize Image Interpreter: 13 hours
+- Team Meetings 7 hours
+- Presentation: 3 hours
+- Update Poster: 2 hours
+- Meeting with Advisor: 2 hours
+- Assignment Effort: 5 hours
+- Code Review: 2 hours
 ### Matthew Kuhr
+- Algorithm Optimization: 12 hours
+- Team Meetings: 7 hours
+- Presentation: 3 hours
+- Presentation Editing: 3 hours
+- Testing: 10 hours
+- Integration: 3 hours
+- Meeting with Advisor: 2 hours
 ### Benjamin Middleton
+- GUI Development and Testing: 20 hours
+- Integration of Image Interpreter with GUI: 5 hours
+- Meetings with Advisor: 2 hours
+- Team Meetings: 7 hours
+- Project Organization: 3 hours
+- Assignment Effort: 5 hours
