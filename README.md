@@ -43,7 +43,7 @@ feedback.
 [Benjamin Middleton](homework_essays/Middleton_Capstone_Assessment.pdf)
 ## Final Self-Assessment Essays
 [Mason Davy](<homework_essays/Mason Davy Spring Reflection.pdf>)\
-[Andy Greer]()\
+[Andy Greer](homework_essays/Andy_Greer_Capstone_Final_Self_Assessment.pdf)\
 [Matthew Kuhr](<homework_essays/Matthew Kuhr Final Assessment.pdf>)\
 [Benjamin Middleton](homework_essays/Middleton_Capstone_Assessment_Spring.pdf)
 ## Professional Biographies
